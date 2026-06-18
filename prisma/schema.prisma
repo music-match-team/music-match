@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Utente {
+  idUtente          Int      @id @default(autoincrement())
+  username          String   @unique
+  email             String   @unique
+  password          String
+  ruolo             String
+  bio               String?
+  livelloEsperienza String?
+  lat               Float?
+  long              Float?
+  dataCreazione     DateTime @default(now())
+
+  strumenti Suona[]
+  generi    Preferisce[]
+
+  matchCreati Match[] @relation("OriginaMatch")
+
+  matchRicevuti Match[] @relation("OttieneMatch")
+
+  messaggiInviati Messaggio[]
+
+  media Media[]
+
+  partecipazioni Partecipa[]
+
+  segnalazioniInviate Segnalazione[] @relation("MittenteSegnalazione")
+
+  segnalazioniRicevute Segnalazione[] @relation("DestinatarioSegnalazione")
+
+  sanzioni Sanzione[]
+
+  notifiche Notifica[]
+}
+
+model Amministratore {
+  idAdmin  Int        @id @default(autoincrement())
+  username String     @unique
+  email    String     @unique
+  password String
+  sanzioni Sanzione[]
+}
+
+model Strumento {
+  idStrumento Int    @id @default(autoincrement())
+  nome        String
+
+  utenti Suona[]
+}
+
+model Genere {
+  idGenere Int    @id @default(autoincrement())
+  nome     String
+
+  utenti Preferisce[]
+}
+
+model Citta {
+  idCitta Int    @id @default(autoincrement())
+  nome    String
+}
+
+model Evento {
+  idEvento Int @id @default(autoincrement())
+
+  titolo String
+
+  descrizione String?
+
+  luogo String
+
+  data DateTime
+
+  partecipanti Partecipa[]
+
+  @@map("evento")
+}
+
+model Media {
+  idMedia Int @id @default(autoincrement())
+
+  source String
+
+  tipo String
+
+  descrizione String?
+
+  dataUpload DateTime @default(now())
+
+  idUtente Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+
+  @@map("media")
+}
+
+model Match {
+  idMatch Int @id @default(autoincrement())
+
+  dataMatch DateTime @default(now())
+
+  idUtenteOrigina Int
+  idUtenteOttiene Int
+
+  utenteOrigina Utente @relation("OriginaMatch", fields: [idUtenteOrigina], references: [idUtente])
+
+  utenteOttiene Utente @relation("OttieneMatch", fields: [idUtenteOttiene], references: [idUtente])
+
+  messaggi Messaggio[]
+
+  @@map("match_utente")
+}
+
+model Messaggio {
+  idMessaggio Int @id @default(autoincrement())
+
+  contenuto String
+
+  timestamp DateTime @default(now())
+
+  idMatch Int
+
+  idUtenteMittente Int
+
+  match Match @relation(fields: [idMatch], references: [idMatch])
+
+  mittente Utente @relation(fields: [idUtenteMittente], references: [idUtente])
+
+  @@map("messaggio")
+}
+
+model Segnalazione {
+  idSegnalazione Int @id @default(autoincrement())
+
+  motivo String
+
+  data DateTime @default(now())
+
+  idMittente     Int
+  idDestinatario Int
+
+  mittente Utente @relation("MittenteSegnalazione", fields: [idMittente], references: [idUtente])
+
+  destinatario Utente @relation("DestinatarioSegnalazione", fields: [idDestinatario], references: [idUtente])
+}
+
+model Sanzione {
+  idSanzione Int @id @default(autoincrement())
+
+  tipo String
+
+  motivo String
+
+  dataInizio DateTime
+
+  dataFine DateTime?
+
+  idAdmin Int
+
+  idUtente Int
+
+  amministratore Amministratore @relation(fields: [idAdmin], references: [idAdmin])
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+
+  @@map("sanzione")
+}
+
+model Suona {
+  idUtente    Int
+  idStrumento Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+
+  strumento Strumento @relation(fields: [idStrumento], references: [idStrumento])
+
+  @@id([idUtente, idStrumento])
+}
+
+model Preferisce {
+  idUtente Int
+  idGenere Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+
+  genere Genere @relation(fields: [idGenere], references: [idGenere])
+
+  @@id([idUtente, idGenere])
+}
+
+model PreferisceLuogo {
+  idUtente Int
+  idCitta  Int
+
+  @@id([idUtente, idCitta])
+}
+
+model Partecipa {
+  idUtente Int
+
+  idEvento Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+
+  evento Evento @relation(fields: [idEvento], references: [idEvento])
+
+  @@id([idUtente, idEvento])
+  @@map("partecipa")
+}
+
+model Notifica {
+  idNotifica Int @id @default(autoincrement())
+
+  messaggio String
+
+  letta Boolean @default(false)
+
+  dataCreazione DateTime @default(now())
+
+  idUtente Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+}
