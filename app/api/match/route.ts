@@ -49,6 +49,20 @@ export async function POST(request: Request) {
           idUtenteOttiene
         }
       });
+	
+	await prisma.notifica.create({
+
+		data: {
+
+		  idUtente:
+			idUtenteOttiene,
+
+		  messaggio:
+			"Hai ricevuto una richiesta di match"
+
+        }
+
+    });
 
     return Response.json(
       {

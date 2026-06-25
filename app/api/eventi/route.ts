@@ -5,11 +5,15 @@ export async function GET() {
   const eventi =
     await prisma.evento.findMany({
 
-      orderBy: {
-        data: "asc"
-      }
+    include: {
+      organizzatore: true
+    },
 
-    });
+    orderBy: {
+      data: "asc"
+    }
+
+  });
 
   return Response.json(eventi);
 }
@@ -36,11 +40,16 @@ export async function POST(
           body.luogo,
 
         data:
-          new Date(body.data)
+          new Date(body.data),
+
+        idOrganizzatore:
+          body.idOrganizzatore
 
       }
 
     });
 
-  return Response.json(evento);
+  return Response.json(
+    evento
+  );
 }

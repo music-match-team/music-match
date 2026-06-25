@@ -44,6 +44,8 @@ model Utente {
   sanzioni Sanzione[]
 
   notifiche Notifica[]
+
+  eventiCreati Evento[]
 }
 
 model Amministratore {
@@ -83,6 +85,10 @@ model Evento {
   luogo String
 
   data DateTime
+
+  idOrganizzatore Int
+
+  organizzatore Utente @relation(fields: [idOrganizzatore], references: [idUtente])
 
   partecipanti Partecipa[]
 

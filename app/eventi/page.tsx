@@ -34,11 +34,6 @@ export default function EventiPage() {
 
     setEventi(data);
   }
-  
-  if (!utente) {
-	  alert("Effettua il login");
-	  return;
-  }
 
   async function partecipa(
     idEvento: number
