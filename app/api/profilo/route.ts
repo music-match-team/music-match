@@ -12,7 +12,9 @@ export async function POST(request: Request) {
       bio,
       livelloEsperienza,
       strumenti,
-      generi
+      generi,
+      lat,
+      long
     } = body;
 
     await prisma.utente.update({
@@ -21,7 +23,9 @@ export async function POST(request: Request) {
       },
       data: {
         bio,
-        livelloEsperienza
+        livelloEsperienza,
+        lat,
+        long
       }
     });
 
