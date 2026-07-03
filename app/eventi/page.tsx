@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import ProteggiPagina from "../components/ProteggiPagina";
 
+import { useRouter } from "next/navigation";
+
 export default function EventiPage() {
+  const router = useRouter();
 	
   const [utente, setUtente] =
   useState<any>(null);
@@ -78,9 +81,15 @@ export default function EventiPage() {
 		  }}
 		>
 
-		  <h1>
-			Eventi
-		  </h1>
+		  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+			  <h1>Eventi</h1>
+			  <button 
+			    onClick={() => router.push("/eventi/crea")}
+			    style={{ padding: "10px", cursor: "pointer", background: "#0070f3", color: "white", border: "none" }}
+			  >
+			    Organizza un evento
+			  </button>
+		  </div>
 
 		  {eventi.map(
 			(evento) => (
@@ -110,7 +119,11 @@ export default function EventiPage() {
 				</p>
 
 				<p>
-				  {evento.luogo}
+				  {evento.citta?.nome}
+				</p>
+
+				<p style={{ fontSize: "14px", color: "#555" }}>
+				  Partecipanti: {evento._count?.partecipanti || 0}
 				</p>
 
 				<button

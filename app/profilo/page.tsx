@@ -96,6 +96,30 @@ export default function ProfiloPage() {
     caricaDati();
   }, []);
 
+  useEffect(() => {
+    if (!utente) return;
+    async function caricaProfilo() {
+      try {
+        const response = await fetch(`/api/profilo?idUtente=${utente.idUtente}`, {
+          cache: "no-store"
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.bio !== null && data.bio !== undefined) setBio(data.bio);
+          if (data.livelloEsperienza) setLivelloEsperienza(data.livelloEsperienza);
+          if (data.lat !== null && data.lat !== undefined) setLat(data.lat);
+          if (data.long !== null && data.long !== undefined) setLong(data.long);
+          if (data.citta) setCittaSelezionata(data.citta);
+          if (data.strumenti) setStrumentiSelezionati(data.strumenti);
+          if (data.generi) setGeneriSelezionati(data.generi);
+        }
+      } catch (e) {
+        console.error("Errore nel caricamento del profilo:", e);
+      }
+    }
+    caricaProfilo();
+  }, [utente]);
+
   function toggleStrumento(id: number) {
     if (strumentiSelezionati.includes(id)) {
       setStrumentiSelezionati(
@@ -151,11 +175,18 @@ export default function ProfiloPage() {
             lat,
 
             long,
+
+            citta: cittaSelezionata,
           }),
         });
 
       const data =
         await response.json();
+
+      if (!response.ok) {
+        setMessaggio(data.error || "Errore durante il salvataggio");
+        return;
+      }
 
       setMessaggio(
         data.message ||
@@ -258,6 +289,7 @@ export default function ProfiloPage() {
 				<label>
 				  <input
 					type="checkbox"
+					checked={strumentiSelezionati.includes(strumento.idStrumento)}
 					onChange={() =>
 					  toggleStrumento(
 						strumento.idStrumento
@@ -279,6 +311,7 @@ export default function ProfiloPage() {
 			  <label>
 				<input
 				  type="checkbox"
+				  checked={generiSelezionati.includes(genere.idGenere)}
 				  onChange={() =>
 					toggleGenere(
 					  genere.idGenere

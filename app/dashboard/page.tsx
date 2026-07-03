@@ -6,14 +6,18 @@ import { useRouter } from "next/navigation";
 import ProteggiPagina
 from "../components/ProteggiPagina";
 
-import LogoutButton
-from "../components/LogoutButton";
+
 
 export default function DashboardPage() {
   const router = useRouter();
 
   const [utente, setUtente] =
     useState<any>(null);
+
+  function eseguiLogout() {
+    localStorage.removeItem("utente");
+    router.push("/login");
+  }
 
   const [dashboard, setDashboard] =
     useState<any>(null);
@@ -96,7 +100,20 @@ export default function DashboardPage() {
           Benvenuto {utente.username}
         </h2>
 
-        <LogoutButton />
+        <button
+          onClick={eseguiLogout}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#dc3545",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontWeight: "bold"
+          }}
+        >
+          Esci (Logout)
+        </button>
 
         <br />
         <br />
