@@ -13,7 +13,7 @@ export default function Navbar() {
     setUtente(u);
   }, [pathname]);
 
-  if (!utente) {
+  if (!utente || pathname.startsWith("/admin")) {
     return null;
   }
 

@@ -9,6 +9,7 @@ export async function GET() {
       username: true,
       bio: true,
       livelloEsperienza: true,
+      citta: true,
 
       strumenti: {
         include: {

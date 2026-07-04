@@ -61,6 +61,34 @@ export default function MusicistiPage() {
     }
   }
 
+  async function segnalaUtente(idUtenteDestinatario: number) {
+    const motivo = prompt("Inserisci il motivo della segnalazione:");
+    if (!motivo) return;
+
+    try {
+      const response = await fetch("/api/segnalazioni", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idMittente: utente.idUtente,
+          idDestinatario: idUtenteDestinatario,
+          motivo,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Utente segnalato con successo.");
+      } else {
+        alert("Errore durante l'invio della segnalazione.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Errore durante l'invio della segnalazione.");
+    }
+  }
+
   return (
     <ProteggiPagina>
 		<main
@@ -85,6 +113,11 @@ export default function MusicistiPage() {
 				}}
 			  >
 				<h2>{musicista.username}</h2>
+
+				<p>
+				  <strong>Città:</strong>{" "}
+				  {musicista.citta || "Non specificata"}
+				</p>
 
 				<p>
 				  <strong>Bio:</strong>{" "}
@@ -122,15 +155,23 @@ export default function MusicistiPage() {
 				</p>
 
 				{musicista.idUtente !== utente.idUtente && (
-				  <button
-					onClick={() =>
-					  creaMatch(
-						musicista.idUtente
-					  )
-					}
-				  >
-					Match
-				  </button>
+				  <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+					  <button
+						onClick={() =>
+						  creaMatch(
+							musicista.idUtente
+						  )
+						}
+					  >
+						Match
+					  </button>
+					  <button
+						onClick={() => segnalaUtente(musicista.idUtente)}
+						style={{ backgroundColor: "#ff4d4f", color: "white", border: "none", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
+					  >
+						Segnala
+					  </button>
+				  </div>
 				)}
 			  </div>
 			))

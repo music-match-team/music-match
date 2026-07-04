@@ -54,6 +54,7 @@ model Amministratore {
   username String     @unique
   email    String     @unique
   password String
+  isSuperAdmin Boolean @default(false)
   sanzioni Sanzione[]
 }
 
