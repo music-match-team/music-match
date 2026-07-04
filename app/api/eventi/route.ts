@@ -5,7 +5,15 @@ export async function GET() {
     const eventi =
       await prisma.evento.findMany({
       include: {
-        organizzatore: true
+        creatori: {
+          include: {
+            utente: true
+          }
+        },
+        citta: true,
+        _count: {
+          select: { partecipanti: true }
+        }
       },
       orderBy: {
         data: "asc"
@@ -26,28 +34,31 @@ export async function POST(
   const body =
     await request.json();
 
+  let dbCitta = await prisma.citta.findFirst({
+    where: { nome: body.luogo }
+  });
+
+  if (!dbCitta) {
+    dbCitta = await prisma.citta.create({
+      data: { nome: body.luogo }
+    });
+  }
+
   const evento =
     await prisma.evento.create({
-
       data: {
-
-        titolo:
-          body.titolo,
-
-        descrizione:
-          body.descrizione,
-
-        luogo:
-          body.luogo,
-
-        data:
-          new Date(body.data),
-
-        idOrganizzatore:
-          body.idOrganizzatore
-
+        titolo: body.titolo,
+        descrizione: body.descrizione,
+        idCitta: dbCitta.idCitta,
+        lat: body.lat,
+        long: body.long,
+        data: new Date(body.data),
+        creatori: {
+          create: {
+            idUtente: body.idOrganizzatore
+          }
+        }
       }
-
     });
 
   return Response.json(

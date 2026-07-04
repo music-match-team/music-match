@@ -46,6 +46,29 @@ export default function ProfiloPage() {
 
   const [messaggio, setMessaggio] = useState("");
 
+  const [ricercaCitta, setRicercaCitta] = useState("");
+  const [risultatiCitta, setRisultatiCitta] = useState<any[]>([]);
+  const [cittaSelezionata, setCittaSelezionata] = useState<any>(null);
+  const [lat, setLat] = useState<number | null>(null);
+  const [long, setLong] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (ricercaCitta.length > 2) {
+      const delayFn = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/citta?q=${ricercaCitta}`);
+          const data = await res.json();
+          setRisultatiCitta(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }, 500);
+      return () => clearTimeout(delayFn);
+    } else {
+      setRisultatiCitta([]);
+    }
+  }, [ricercaCitta]);
+
   useEffect(() => {
     async function caricaDati() {
       try {
@@ -72,6 +95,30 @@ export default function ProfiloPage() {
 
     caricaDati();
   }, []);
+
+  useEffect(() => {
+    if (!utente) return;
+    async function caricaProfilo() {
+      try {
+        const response = await fetch(`/api/profilo?idUtente=${utente.idUtente}`, {
+          cache: "no-store"
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.bio !== null && data.bio !== undefined) setBio(data.bio);
+          if (data.livelloEsperienza) setLivelloEsperienza(data.livelloEsperienza);
+          if (data.lat !== null && data.lat !== undefined) setLat(data.lat);
+          if (data.long !== null && data.long !== undefined) setLong(data.long);
+          if (data.citta) setCittaSelezionata(data.citta);
+          if (data.strumenti) setStrumentiSelezionati(data.strumenti);
+          if (data.generi) setGeneriSelezionati(data.generi);
+        }
+      } catch (e) {
+        console.error("Errore nel caricamento del profilo:", e);
+      }
+    }
+    caricaProfilo();
+  }, [utente]);
 
   function toggleStrumento(id: number) {
     if (strumentiSelezionati.includes(id)) {
@@ -124,11 +171,22 @@ export default function ProfiloPage() {
 
             generi:
               generiSelezionati,
+
+            lat,
+
+            long,
+
+            citta: cittaSelezionata,
           }),
         });
 
       const data =
         await response.json();
+
+      if (!response.ok) {
+        setMessaggio(data.error || "Errore durante il salvataggio");
+        return;
+      }
 
       setMessaggio(
         data.message ||
@@ -153,6 +211,36 @@ export default function ProfiloPage() {
 		  }}
 		>
 		  <h1>Profilo Utente</h1>
+
+		  <h2>Città (GeoNames)</h2>
+		  <input
+			type="text"
+			placeholder="Cerca la tua città..."
+			value={ricercaCitta}
+			onChange={(e) => setRicercaCitta(e.target.value)}
+		  />
+		  {risultatiCitta.length > 0 && (
+			<ul style={{ border: "1px solid #ccc", listStyle: "none", padding: 0, marginTop: "5px", maxHeight: "150px", overflowY: "auto", backgroundColor: "white", color: "black" }}>
+			  {risultatiCitta.map((c: any) => (
+				<li
+				  key={c.geonameId}
+				  style={{ padding: "8px", cursor: "pointer", borderBottom: "1px solid #eee" }}
+				  onClick={() => {
+					setLat(parseFloat(c.lat));
+					setLong(parseFloat(c.lng));
+					setCittaSelezionata(c.name);
+					setRicercaCitta("");
+					setRisultatiCitta([]);
+				  }}
+				>
+				  {c.name}
+				</li>
+			  ))}
+			</ul>
+		  )}
+		  {cittaSelezionata && (
+			<p style={{ marginTop: "10px" }}><strong>Città selezionata:</strong> {cittaSelezionata}</p>
+		  )}
 
 		  <h2>Bio</h2>
 
@@ -201,6 +289,7 @@ export default function ProfiloPage() {
 				<label>
 				  <input
 					type="checkbox"
+					checked={strumentiSelezionati.includes(strumento.idStrumento)}
 					onChange={() =>
 					  toggleStrumento(
 						strumento.idStrumento
@@ -213,7 +302,6 @@ export default function ProfiloPage() {
 			  </div>
 			)
 		  )}
-
 		  <h2>Generi Musicali</h2>
 
 		  {generi.map((genere) => (
@@ -223,6 +311,7 @@ export default function ProfiloPage() {
 			  <label>
 				<input
 				  type="checkbox"
+				  checked={generiSelezionati.includes(genere.idGenere)}
 				  onChange={() =>
 					toggleGenere(
 					  genere.idGenere

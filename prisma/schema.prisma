@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,6 +22,7 @@ model Utente {
   livelloEsperienza String?
   lat               Float?
   long              Float?
+  citta             String?
   dataCreazione     DateTime @default(now())
 
   strumenti Suona[]
@@ -45,7 +46,7 @@ model Utente {
 
   notifiche Notifica[]
 
-  eventiCreati Evento[]
+  eventiCreati Crea[]
 }
 
 model Amministratore {
@@ -73,6 +74,8 @@ model Genere {
 model Citta {
   idCitta Int    @id @default(autoincrement())
   nome    String
+
+  eventi Evento[]
 }
 
 model Evento {
@@ -82,13 +85,15 @@ model Evento {
 
   descrizione String?
 
-  luogo String
+  idCitta Int
+  citta   Citta @relation(fields: [idCitta], references: [idCitta])
+
+  lat Float?
+  long Float?
 
   data DateTime
 
-  idOrganizzatore Int
-
-  organizzatore Utente @relation(fields: [idOrganizzatore], references: [idUtente])
+  creatori Crea[]
 
   partecipanti Partecipa[]
 
@@ -212,6 +217,16 @@ model PreferisceLuogo {
   idCitta  Int
 
   @@id([idUtente, idCitta])
+}
+
+model Crea {
+  idUtente Int
+  idEvento Int
+
+  utente Utente @relation(fields: [idUtente], references: [idUtente])
+  evento Evento @relation(fields: [idEvento], references: [idEvento])
+
+  @@id([idUtente, idEvento])
 }
 
 model Partecipa {
