@@ -11,7 +11,8 @@ export async function POST(
 
     const {
       idUtenteOrigina,
-      idUtenteOttiene
+      idUtenteOttiene,
+      messaggio
     } = body;
 
     if (
@@ -62,7 +63,8 @@ export async function POST(
       return Response.json(
         {
           error:
-            "Match già esistente"
+            "Match già esistente",
+          match: matchEsistente
         },
         {
           status: 409
@@ -77,7 +79,15 @@ export async function POST(
         data: {
 
           idUtenteOrigina,
-          idUtenteOttiene
+          idUtenteOttiene,
+          ...(messaggio ? {
+            messaggi: {
+              create: {
+                contenuto: messaggio,
+                idUtenteMittente: idUtenteOrigina
+              }
+            }
+          } : {})
 
         }
 

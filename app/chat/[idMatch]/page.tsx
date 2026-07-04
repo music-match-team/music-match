@@ -25,6 +25,8 @@ export default function ChatPage() {
     setMessaggi] =
     useState<any[]>([]);
 
+  const [matchInfo, setMatchInfo] = useState<any>(null);
+
   const [nuovoMessaggio,
     setNuovoMessaggio] =
     useState("");
@@ -42,17 +44,31 @@ export default function ChatPage() {
 
   }, []);
 
-  async function caricaMessaggi() {
+  async function caricaDati() {
+    if (!idMatch) return;
 
-    const response =
-      await fetch(
-        `/api/messaggi?idMatch=${idMatch}`
-      );
+    try {
+      // Carica il match (se non ancora caricato)
+      if (!matchInfo) {
+        const matchRes = await fetch(`/api/match/${idMatch}`);
+        if (matchRes.ok) {
+          const matchData = await matchRes.json();
+          setMatchInfo(matchData);
+        }
+      }
 
-    const data =
-      await response.json();
-
-    setMessaggi(data);
+      // Carica i messaggi
+      const response =
+        await fetch(
+          `/api/messaggi?idMatch=${idMatch}`
+        );
+      if (response.ok) {
+        const data = await response.json();
+        setMessaggi(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   useEffect(() => {
@@ -61,11 +77,11 @@ export default function ChatPage() {
       return;
     }
 
-    caricaMessaggi();
+    caricaDati();
 
     const interval =
       setInterval(
-        caricaMessaggi,
+        caricaDati,
         3000
       );
 
@@ -74,7 +90,7 @@ export default function ChatPage() {
         interval
       );
 
-  }, [idMatch]);
+  }, [idMatch, matchInfo]);
 
   async function inviaMessaggio() {
 
@@ -116,7 +132,16 @@ export default function ChatPage() {
 
     setNuovoMessaggio("");
 
-    caricaMessaggi();
+    caricaDati();
+  }
+
+  let nomeAltroUtente = "Caricamento...";
+  if (matchInfo && utente) {
+    if (matchInfo.idUtenteOrigina === utente.idUtente) {
+      nomeAltroUtente = matchInfo.utenteOttiene?.username || "Utente";
+    } else {
+      nomeAltroUtente = matchInfo.utenteOrigina?.username || "Utente";
+    }
   }
 
   return (
@@ -130,7 +155,7 @@ export default function ChatPage() {
     >
 
       <h1>
-        Chat
+        Chat con {nomeAltroUtente}
       </h1>
 
       <div

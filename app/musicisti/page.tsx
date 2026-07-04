@@ -1,30 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ProteggiPagina from "../components/ProteggiPagina";
 
 export default function MusicistiPage() {
-	
-  const [utente, setUtente] =
-  useState<any>(null);
+  const router = useRouter();
+  const [utente, setUtente] = useState<any>(null);
+  const [musicisti, setMusicisti] = useState<any[]>([]);
 
   useEffect(() => {
-
-    const u =
-      JSON.parse(
-        localStorage.getItem("utente") || "null"
-      );
-
+    const u = JSON.parse(
+      localStorage.getItem("utente") || "null"
+    );
     setUtente(u);
-
   }, []);
-
-  const [musicisti, setMusicisti] = useState<any[]>([]);
 
   useEffect(() => {
     async function caricaMusicisti() {
       try {
-        const response = await fetch("/api/musicisti");
+        let url = "/api/musicisti";
+        if (utente && utente.idUtente) {
+            url += `?idUtente=${utente.idUtente}`;
+        }
+        
+        const response = await fetch(url);
         const data = await response.json();
 
         setMusicisti(data);
@@ -33,10 +33,17 @@ export default function MusicistiPage() {
       }
     }
 
-    caricaMusicisti();
-  }, []);
+    if (utente !== null) {
+      caricaMusicisti();
+    }
+  }, [utente]);
 
   async function creaMatch(idUtenteOttiene: number) {
+    const messaggio = prompt("Scrivi un messaggio per presentarti (opzionale):");
+    
+    // Se l'utente preme "Annulla" sul prompt, interrompiamo la creazione del match
+    if (messaggio === null) return;
+
     try {
       const response = await fetch("/api/match", {
         method: "POST",
@@ -48,12 +55,21 @@ export default function MusicistiPage() {
         body: JSON.stringify({
           idUtenteOrigina: utente.idUtente, 
           idUtenteOttiene,
+          messaggio,
         }),
       });
 
       const data = await response.json();
 
-      alert(data.message || data.error);
+      if (response.ok && data.match) {
+        // Reindirizza l'utente direttamente alla pagina della chat
+        router.push(`/chat/${data.match.idMatch}`);
+      } else {
+        alert(data.message || data.error);
+        if (data.match) {
+           router.push(`/chat/${data.match.idMatch}`);
+        }
+      }
     } catch (error) {
       console.error(error);
 
@@ -117,6 +133,9 @@ export default function MusicistiPage() {
 				<p>
 				  <strong>Città:</strong>{" "}
 				  {musicista.citta || "Non specificata"}
+                  {musicista.distanceKm !== undefined && musicista.distanceKm !== null && (
+                      <span> ({musicista.distanceKm} km di distanza)</span>
+                  )}
 				</p>
 
 				<p>
@@ -154,7 +173,7 @@ export default function MusicistiPage() {
 					: "Nessuno"}
 				</p>
 
-				{musicista.idUtente !== utente.idUtente && (
+				{utente && musicista.idUtente !== utente.idUtente && (
 				  <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
 					  <button
 						onClick={() =>
