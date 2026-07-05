@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 async function main() {
   try {
     const eventi = await prisma.evento.findMany({
-      include: { organizzatore: true },
+      include: { creatori: true },
       orderBy: { data: 'asc' }
     });
     console.log("Success:", eventi);

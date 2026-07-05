@@ -59,3 +59,69 @@ export async function POST(
     notifica
   );
 }
+
+export async function PATCH(
+  request: Request
+) {
+  try {
+    const body = await request.json();
+    const { idNotifica, idUtente, letta } = body;
+
+    if (idNotifica !== undefined) {
+      const updated = await prisma.notifica.update({
+        where: {
+          idNotifica: Number(idNotifica),
+        },
+        data: {
+          letta: Boolean(letta),
+        },
+      });
+      return Response.json(updated);
+    } else if (idUtente !== undefined) {
+      const updated = await prisma.notifica.updateMany({
+        where: {
+          idUtente: Number(idUtente),
+          letta: false,
+        },
+        data: {
+          letta: true,
+        },
+      });
+      return Response.json(updated);
+    }
+
+    return Response.json({ error: "Missing parameters" }, { status: 400 });
+  } catch (error: any) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: Request
+) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const idNotifica = searchParams.get("idNotifica");
+    const idUtente = searchParams.get("idUtente");
+
+    if (idNotifica) {
+      await prisma.notifica.delete({
+        where: {
+          idNotifica: Number(idNotifica),
+        },
+      });
+      return Response.json({ success: true });
+    } else if (idUtente) {
+      await prisma.notifica.deleteMany({
+        where: {
+          idUtente: Number(idUtente),
+        },
+      });
+      return Response.json({ success: true });
+    }
+
+    return Response.json({ error: "Missing parameters" }, { status: 400 });
+  } catch (error: any) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}
