@@ -2,20 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AdminSidebar from "../components/AdminSidebar";
 
 export default function SegnalazioniPage() {
   const router = useRouter();
-  const [segnalazioni, setSegnalazioni] = useState<any[]>([]);
   const [admin, setAdmin] = useState<any>(null);
+  const [segnalazioni, setSegnalazioni] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [messaggio, setMessaggio] = useState("");
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const a = JSON.parse(localStorage.getItem("admin") || "null");
-    if (!a) {
-      router.push("/admin/login");
-    } else {
-      setAdmin(a);
-      caricaSegnalazioni();
-    }
+    if (!a) { router.push("/admin/login"); return; }
+    setAdmin(a);
+    caricaSegnalazioni();
   }, [router]);
 
   async function caricaSegnalazioni() {
@@ -24,45 +26,48 @@ export default function SegnalazioniPage() {
       if (response.ok) {
         const data = await response.json();
         setSegnalazioni(data);
+        // Rimossa autoselezione per supportare la visualizzazione mobile
       }
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) { console.error(error); }
+    finally { setLoading(false); }
+  }
+
+  function showMsg(msg: string, error = false) {
+    setMessaggio(msg);
+    setIsError(error);
+    setTimeout(() => setMessaggio(""), 4000);
   }
 
   async function eliminaSegnalazione(idSegnalazione: number) {
-    if (!confirm("Sei sicuro di voler eliminare questa segnalazione?")) return;
-
+    if (!confirm("Sei sicuro di voler archiviare/eliminare questa segnalazione?")) return;
     try {
       const response = await fetch("/api/admin/segnalazioni", {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ idSegnalazione })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idSegnalazione }),
       });
-
       if (response.ok) {
-        alert("Segnalazione eliminata");
-        caricaSegnalazioni();
+        setSegnalazioni((prev) => prev.filter((s) => s.idSegnalazione !== idSegnalazione));
+        if (selected?.idSegnalazione === idSegnalazione) setSelected(null);
+        showMsg("Segnalazione archiviata con successo");
       } else {
-        alert("Errore durante l'eliminazione");
+        showMsg("Errore durante l'eliminazione", true);
       }
     } catch (error) {
       console.error(error);
-      alert("Errore durante l'eliminazione");
+      showMsg("Errore durante l'eliminazione", true);
     }
   }
 
   async function sanzionaUtente(idUtente: number, tipo: "BAN" | "SOSPENSIONE") {
-    let motivo = prompt(`Inserisci il motivo del ${tipo === 'BAN' ? 'ban' : 'sospensione'}:`);
+    const motivo = prompt(`Inserisci il motivo del ${tipo === "BAN" ? "ban" : "sospensione"}:`);
     if (!motivo) return;
 
     let giorniSospensione = 0;
     if (tipo === "SOSPENSIONE") {
       const giorni = prompt("Inserisci il numero di giorni di sospensione:");
       if (!giorni || isNaN(parseInt(giorni))) {
-        alert("Giorni non validi.");
+        showMsg("Giorni non validi.", true);
         return;
       }
       giorniSospensione = parseInt(giorni);
@@ -75,100 +80,167 @@ export default function SegnalazioniPage() {
           "Content-Type": "application/json",
           "admin-id": admin.idAdmin.toString(),
         },
-        body: JSON.stringify({
-          idUtente,
-          tipo,
-          motivo,
-          giorniSospensione
-        })
+        body: JSON.stringify({ idUtente, tipo, motivo, giorniSospensione }),
       });
 
       if (response.ok) {
-        alert(`Sanzione (${tipo}) applicata con successo!`);
+        showMsg(`${tipo === "BAN" ? "Ban" : "Sospensione"} applicata con successo`);
       } else {
         const data = await response.json();
-        alert(data.error || "Errore durante l'applicazione della sanzione");
+        showMsg(data.error || "Errore nell'applicazione della sanzione", true);
       }
     } catch (error) {
       console.error(error);
-      alert("Errore durante l'applicazione della sanzione");
+      showMsg("Errore nell'applicazione della sanzione", true);
     }
   }
 
-  function logout() {
-    localStorage.removeItem("admin");
-    router.push("/admin/login");
-  }
-
-  if (!admin) return <p>Caricamento...</p>;
+  if (!admin) return null;
 
   return (
-    <main style={{ padding: "20px", maxWidth: "1000px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Gestione Segnalazioni</h1>
-        <div>
-          {admin.isSuperAdmin && (
-            <button onClick={() => router.push("/admin/gestione-admin")} style={{ padding: "8px 16px", marginRight: "10px" }}>Gestione Amministratori</button>
-          )}
-          <button onClick={logout} style={{ padding: "8px 16px" }}>Logout</button>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+      <AdminSidebar />
+      <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
+        <div className="mb-6">
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Segnalazioni</h1>
+          <p className="text-zinc-400 text-sm mt-1">Esamina le segnalazioni degli utenti e prendi provvedimenti.</p>
         </div>
-      </div>
 
-      {segnalazioni.length === 0 ? (
-        <p>Nessuna segnalazione presente.</p>
-      ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-          <thead>
-            <tr style={{ backgroundColor: "#f2f2f2", textAlign: "left" }}>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>ID</th>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>Data</th>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>Mittente</th>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>Destinatario</th>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>Motivo</th>
-              <th style={{ padding: "12px", border: "1px solid #ddd" }}>Azioni</th>
-            </tr>
-          </thead>
-          <tbody>
-            {segnalazioni.map((s) => (
-              <tr key={s.idSegnalazione}>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>{s.idSegnalazione}</td>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  {new Date(s.data).toLocaleString()}
-                </td>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  {s.mittente.username} ({s.mittente.email})
-                </td>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  {s.destinatario.username} ({s.destinatario.email})
-                </td>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>{s.motivo}</td>
-                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
+        {messaggio && (
+          <div className={`mb-6 p-3 rounded-lg text-sm font-medium flex items-center gap-2 border ${
+            isError ? "bg-red-950/40 border-red-800/80 text-red-300" : "bg-emerald-950/40 border-emerald-800/80 text-emerald-300"
+          }`}>
+            {messaggio}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Lista segnalazioni (colonna sinistra) */}
+          <div className={`lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden ${selected ? "hidden lg:block" : "block"}`}>
+            <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-900/80">
+              <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
+                Ticket ({segnalazioni.length})
+              </h2>
+            </div>
+            <div className="max-h-[600px] overflow-y-auto divide-y divide-zinc-800/60">
+              {loading ? (
+                <div className="space-y-0">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-20 bg-zinc-800/30 animate-pulse" />
+                  ))}
+                </div>
+              ) : segnalazioni.length === 0 ? (
+                <p className="text-zinc-500 text-sm py-10 text-center">Nessuna segnalazione presente.</p>
+              ) : (
+                segnalazioni.map((s) => (
+                  <button
+                    key={s.idSegnalazione}
+                    onClick={() => setSelected(s)}
+                    className={`w-full text-left px-5 py-4 transition-all cursor-pointer ${
+                      selected?.idSegnalazione === s.idSegnalazione
+                        ? "bg-violet-600/10 border-l-2 border-l-violet-500"
+                        : "hover:bg-zinc-800/50 border-l-2 border-l-transparent"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-zinc-200 truncate">
+                        #{s.idSegnalazione} — {s.destinatario.username}
+                      </p>
+                      <span className="text-[10px] text-zinc-500 whitespace-nowrap ml-2">
+                        {new Date(s.data).toLocaleDateString("it-IT")}
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1 truncate">
+                      da {s.mittente.username}: {s.motivo}
+                    </p>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Dettaglio segnalazione (colonna destra) */}
+          <div className={`lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 ${!selected ? "hidden lg:block" : "block"}`}>
+            {!selected ? (
+              <div className="flex flex-col items-center justify-center h-full py-20 text-zinc-500">
+                <svg className="w-12 h-12 mb-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p className="text-sm">Seleziona una segnalazione dalla lista</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    {/* Pulsante Indietro per Mobile */}
                     <button
-                      onClick={() => sanzionaUtente(s.destinatario.idUtente, "SOSPENSIONE")}
-                      style={{ backgroundColor: "#faad14", color: "white", border: "none", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
+                      onClick={() => setSelected(null)}
+                      className="lg:hidden mb-4 flex items-center gap-1.5 text-xs text-violet-400 hover:text-violet-300 font-semibold cursor-pointer"
                     >
-                      Sospendi
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Torna alla lista
+                    </button>
+                    <h2 className="text-xl font-bold text-white">
+                      Segnalazione #{selected.idSegnalazione}
+                    </h2>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      {new Date(selected.data).toLocaleString("it-IT")}
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 bg-amber-600/20 border border-amber-700/40 text-amber-300 text-xs font-bold rounded-full">
+                    Da Esaminare
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-1">Segnalante</p>
+                    <p className="text-sm font-bold text-zinc-200">{selected.mittente.username}</p>
+                    <p className="text-xs text-zinc-500">{selected.mittente.email}</p>
+                  </div>
+                  <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-1">Segnalato</p>
+                    <p className="text-sm font-bold text-amber-300">{selected.destinatario.username}</p>
+                    <p className="text-xs text-zinc-500">{selected.destinatario.email}</p>
+                  </div>
+                </div>
+
+                <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Motivo della Segnalazione</p>
+                  <p className="text-sm text-zinc-200 leading-relaxed">{selected.motivo}</p>
+                </div>
+
+                {/* Azioni */}
+                <div className="border-t border-zinc-800 pt-5">
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-3">Azioni Disponibili</p>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => sanzionaUtente(selected.destinatario.idUtente, "SOSPENSIONE")}
+                      className="px-4 py-2.5 bg-amber-600/20 border border-amber-700/50 text-amber-300 rounded-lg text-sm font-semibold hover:bg-amber-600/30 transition-all cursor-pointer"
+                    >
+                      Sospendi Utente
                     </button>
                     <button
-                      onClick={() => sanzionaUtente(s.destinatario.idUtente, "BAN")}
-                      style={{ backgroundColor: "#820014", color: "white", border: "none", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
+                      onClick={() => sanzionaUtente(selected.destinatario.idUtente, "BAN")}
+                      className="px-4 py-2.5 bg-red-600/20 border border-red-700/50 text-red-300 rounded-lg text-sm font-semibold hover:bg-red-600/30 transition-all cursor-pointer"
                     >
-                      Banna
+                      Banna Utente
                     </button>
                     <button
-                      onClick={() => eliminaSegnalazione(s.idSegnalazione)}
-                      style={{ backgroundColor: "#ff4d4f", color: "white", border: "none", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
+                      onClick={() => eliminaSegnalazione(selected.idSegnalazione)}
+                      className="px-4 py-2.5 bg-zinc-800/50 border border-zinc-700/50 text-zinc-300 rounded-lg text-sm font-semibold hover:bg-zinc-700/50 transition-all cursor-pointer"
                     >
-                      Elimina Segnalazione
+                      Archivia Segnalazione
                     </button>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </main>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }

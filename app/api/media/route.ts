@@ -60,3 +60,33 @@ export async function GET(
 
   return Response.json(media);
 }
+
+export async function DELETE(
+  request: Request
+) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const idMedia = Number(searchParams.get("idMedia"));
+
+    if (!idMedia) {
+      return Response.json(
+        { error: "ID Media mancante" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.media.delete({
+      where: {
+        idMedia
+      }
+    });
+
+    return Response.json({ message: "Media eliminato con successo" });
+  } catch (error) {
+    console.error(error);
+    return Response.json(
+      { error: "Errore durante l'eliminazione del media" },
+      { status: 500 }
+    );
+  }
+}
