@@ -179,12 +179,9 @@ export default function ProfiloPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] || null;
     setFile(selected);
-    if (selected && selected.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFilePreview(reader.result as string);
-      };
-      reader.readAsDataURL(selected);
+    if (selected && (selected.type.startsWith("image/") || selected.type.startsWith("audio/") || selected.type.startsWith("video/"))) {
+      const url = URL.createObjectURL(selected);
+      setFilePreview(url);
     } else {
       setFilePreview(null);
     }
@@ -198,6 +195,34 @@ export default function ProfiloPage() {
 
     if (!file) {
       alert("Seleziona un file da caricare");
+      return;
+    }
+
+    const isAudio = file.type.startsWith("audio/");
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+    
+    if (!isAudio && !isVideo && !isImage) {
+      alert("Formato file non supportato");
+      return;
+    }
+
+    const numAudio = media.filter((m) => m.tipo === "audio").length;
+    const numVideo = media.filter((m) => m.tipo === "video").length;
+    const numFoto = media.filter((m) => m.tipo === "immagine").length;
+
+    if (isAudio && numAudio >= 4) {
+      alert("Puoi caricare un massimo di 4 file audio.");
+      return;
+    }
+
+    if (isVideo && numVideo >= 2) {
+      alert("Puoi caricare un massimo di 2 video.");
+      return;
+    }
+
+    if (isImage && numFoto >= 4) {
+      alert("Puoi caricare un massimo di 4 foto.");
       return;
     }
 
@@ -225,7 +250,7 @@ export default function ProfiloPage() {
         },
         body: JSON.stringify({
           source: uploadData.source,
-          tipo: "immagine",
+          tipo: isAudio ? "audio" : isVideo ? "video" : "immagine",
           descrizione,
           idUtente: utente.idUtente,
         }),
@@ -485,18 +510,49 @@ export default function ProfiloPage() {
                 </button>
               </div>
             </div>
-
             {/* Right column: Media Upload & Gallery */}
             <div className="space-y-6">
               
               {/* Form Caricamento Media */}
               <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-                <h2 className="text-xl font-bold text-white mb-4 border-b border-zinc-800 pb-2 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                  Carica Nuovo Media
-                </h2>
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-2 mb-4">
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Carica Nuovo Media
+                  </h2>
+                </div>
+
+                <div className="mb-4 p-4 rounded-xl bg-violet-900/20 border border-violet-800/40">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-sm font-bold text-violet-300 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Obiettivo: Profilo Completo
+                    </h3>
+                    <span className="text-xs font-medium text-violet-400">
+                      {media.length}/10 Media
+                    </span>
+                  </div>
+                  
+                  <div className="w-full bg-zinc-950/50 rounded-full h-2.5 overflow-hidden mb-3 border border-zinc-800/50">
+                    <div className="bg-gradient-to-r from-violet-600 to-fuchsia-500 h-2.5 rounded-full transition-all duration-500" style={{ width: `${(media.length / 10) * 100}%` }}></div>
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-zinc-400 font-medium">
+                    <span className={media.filter((m) => m.tipo === "immagine").length >= 4 ? "text-emerald-400 font-bold" : ""}>
+                      📸 Foto: {media.filter((m) => m.tipo === "immagine").length}/4
+                    </span>
+                    <span className={media.filter((m) => m.tipo === "audio").length >= 4 ? "text-emerald-400 font-bold" : ""}>
+                      🎵 Audio: {media.filter((m) => m.tipo === "audio").length}/4
+                    </span>
+                    <span className={media.filter((m) => m.tipo === "video").length >= 2 ? "text-emerald-400 font-bold" : ""}>
+                      🎥 Video: {media.filter((m) => m.tipo === "video").length}/2
+                    </span>
+                  </div>
+                </div>
 
                 <div className="space-y-4">
                   {/* Area File selector */}
@@ -507,7 +563,7 @@ export default function ProfiloPage() {
                     <div className="relative group border-2 border-dashed border-zinc-700 hover:border-violet-500 rounded-lg p-4 transition-all bg-zinc-800/30 text-center cursor-pointer">
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/*,audio/*,video/*"
                         onChange={handleFileChange}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       />
@@ -519,20 +575,28 @@ export default function ProfiloPage() {
                           {file ? file.name : "Scegli un file o trascinalo qui"}
                         </p>
                         <p className="text-[10px] text-zinc-500">
-                          PNG, JPG, GIF fino a 10MB
+                          Immagini, Audio o Video fino a 10MB
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Preview dell'immagine se presente */}
+                  {/* Preview dell'immagine, audio o video se presente */}
                   {filePreview && (
                     <div className="relative rounded-lg overflow-hidden border border-zinc-700/60 max-h-48 flex items-center justify-center bg-zinc-950">
-                      <img
-                        src={filePreview}
-                        alt="Anteprima"
-                        className="max-h-48 object-contain"
-                      />
+                      {file?.type.startsWith("audio/") ? (
+                        <div className="flex w-full p-4 justify-center">
+                          <audio src={filePreview} controls className="w-full" />
+                        </div>
+                      ) : file?.type.startsWith("video/") ? (
+                        <video src={filePreview} controls className="max-h-48 object-contain" />
+                      ) : (
+                        <img
+                          src={filePreview}
+                          alt="Anteprima"
+                          className="max-h-48 object-contain"
+                        />
+                      )}
                       <button
                         type="button"
                         onClick={() => {
@@ -612,11 +676,30 @@ export default function ProfiloPage() {
                         className="relative group rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950/70 shadow-lg hover:border-zinc-700 hover:shadow-xl transition-all"
                       >
                         <div className="aspect-square relative flex items-center justify-center overflow-hidden bg-black/40">
-                          <img
-                            src={m.source}
-                            alt={m.descrizione || "Media"}
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                          />
+                          {m.tipo === "audio" ? (
+                            <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-zinc-900">
+                              <svg className="w-12 h-12 text-violet-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h6V3H9z" />
+                              </svg>
+                              <audio
+                                src={m.source}
+                                controls
+                                className="w-full h-8"
+                              />
+                            </div>
+                          ) : m.tipo === "video" ? (
+                            <video
+                              src={m.source}
+                              controls
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <img
+                              src={m.source}
+                              alt={m.descrizione || "Media"}
+                              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                            />
+                          )}
                           
                           {/* overlay con bottone per eliminare */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3">
