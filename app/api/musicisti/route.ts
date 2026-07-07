@@ -55,7 +55,8 @@ export async function GET(request: NextRequest) {
         include: {
           genere: true
         }
-      }
+      },
+      media: true
     }
   });
 

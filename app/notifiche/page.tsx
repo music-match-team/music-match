@@ -127,15 +127,15 @@ export default function NotifichePage() {
 
   return (
     <ProteggiPagina>
-      <main className="max-w-4xl mx-auto py-10 px-4 md:px-8 min-h-screen text-slate-100">
+      <main className="max-w-4xl mx-auto py-10 px-4 md:px-8 min-h-screen text-zinc-100">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#3b38f6] to-[#c314f5] bg-clip-text text-transparent">
               Centro Notifiche
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-zinc-400 text-sm mt-1">
               Rimani aggiornato sui tuoi match, eventi e attività.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default function NotifichePage() {
             {conteggioNonLette > 0 && (
               <button
                 onClick={segnaTutteComeLette}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-sm font-semibold rounded-lg transition-all border border-slate-700 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-sm font-semibold rounded-lg transition-all border border-zinc-700 cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6 9 17l-5-5"/>
@@ -170,17 +170,17 @@ export default function NotifichePage() {
         </div>
 
         {/* Tab ed Elenco */}
-        <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div className="border border-zinc-800 rounded-2xl p-6 shadow-sm">
           
           {/* Sezione Filtri */}
-          <div className="flex border-b border-slate-800 pb-4 mb-6">
+          <div className="flex border-b border-zinc-800 pb-4 mb-6">
             <div className="flex space-x-2">
               <button
                 onClick={() => setFiltro("tutte")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
                   filtro === "tutte"
-                    ? "bg-slate-800 text-white shadow-md border border-slate-700"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-zinc-800 text-white shadow-md border border-zinc-700"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 Tutte ({notifiche.length})
@@ -189,8 +189,8 @@ export default function NotifichePage() {
                 onClick={() => setFiltro("non_lette")}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
                   filtro === "non_lette"
-                    ? "bg-slate-800 text-white shadow-md border border-slate-700"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-zinc-800 text-white shadow-md border border-zinc-700"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 Non lette ({conteggioNonLette})
@@ -201,19 +201,19 @@ export default function NotifichePage() {
           {/* Lista Notifiche */}
           {loading ? (
             <div className="py-20 flex justify-center items-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c314f5]"></div>
             </div>
           ) : notificheFiltrate.length === 0 ? (
             /* Empty State */
             <div className="py-20 flex flex-col items-center text-center max-w-sm mx-auto">
-              <div className="w-16 h-16 rounded-full bg-slate-800/80 flex items-center justify-center mb-4 text-slate-400 border border-slate-700">
+              <div className="w-16 h-16 rounded-full bg-zinc-800/80 flex items-center justify-center mb-4 text-zinc-400 border border-zinc-700">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
                   <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-slate-200">Tutto in ordine!</h3>
-              <p className="text-slate-400 text-sm mt-2">
+              <h3 className="text-lg font-semibold text-zinc-200">Tutto in ordine!</h3>
+              <p className="text-zinc-400 text-sm mt-2">
                 {filtro === "non_lette" 
                   ? "Non hai nessuna notifica da leggere al momento." 
                   : "Non hai ancora nessuna notifica. Le novità appariranno qui."}
@@ -226,30 +226,30 @@ export default function NotifichePage() {
                   key={n.idNotifica}
                   className={`group relative flex items-start gap-4 p-4 rounded-xl border transition-all duration-300 ${
                     n.letta
-                      ? "bg-slate-950/20 border-slate-800/80 text-slate-300 opacity-75 hover:opacity-100"
-                      : "bg-slate-850 border-blue-900/30 hover:border-blue-900/60 shadow-md border-l-4 border-l-blue-500"
+                      ? "bg-zinc-950/20 border-zinc-800/80 text-zinc-300 opacity-75 hover:opacity-100"
+                      : "bg-zinc-800/50 border-[#c314f5]/30 hover:border-[#c314f5]/60 shadow-md border-l-4 border-l-[#c314f5]"
                   }`}
                 >
                   {/* Icona di stato o pallino blu */}
                   <div className="mt-1 flex-shrink-0">
                     {!n.letta ? (
                       <span className="flex h-3.5 w-3.5 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-blue-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c314f5] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#c314f5]"></span>
                       </span>
                     ) : (
-                      <div className="w-3.5 h-3.5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
+                      <div className="w-3.5 h-3.5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-600"></div>
                       </div>
                     )}
                   </div>
 
                   {/* Messaggio e Data */}
                   <div className="flex-1 min-w-0 pr-8">
-                    <p className={`text-sm leading-relaxed break-words ${n.letta ? "text-slate-400" : "text-slate-100 font-medium"}`}>
+                    <p className={`text-sm leading-relaxed break-words ${n.letta ? "text-zinc-400" : "text-zinc-100 font-medium"}`}>
                       {n.messaggio}
                     </p>
-                    <span className="inline-block mt-2 text-xs text-slate-500">
+                    <span className="inline-block mt-2 text-xs text-zinc-500">
                       {formattaData(n.dataCreazione)}
                     </span>
                   </div>
@@ -259,7 +259,7 @@ export default function NotifichePage() {
                     {!n.letta && (
                       <button
                         onClick={() => segnaComeLetta(n.idNotifica)}
-                        className="p-1.5 hover:bg-slate-800 text-blue-400 hover:text-blue-300 rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 hover:bg-zinc-800 text-[#c314f5] hover:text-[#e879f9] rounded-lg transition-colors cursor-pointer"
                         title="Segna come letta"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -269,7 +269,7 @@ export default function NotifichePage() {
                     )}
                     <button
                       onClick={() => eliminaNotifica(n.idNotifica)}
-                      className="p-1.5 hover:bg-slate-800 text-slate-400 hover:text-red-400 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 hover:bg-zinc-800 text-zinc-400 hover:text-red-400 rounded-lg transition-colors cursor-pointer"
                       title="Elimina notifica"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

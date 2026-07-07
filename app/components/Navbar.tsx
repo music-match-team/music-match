@@ -114,188 +114,95 @@ export default function Navbar() {
   const unreadCount = notifiche.filter(n => !n.letta).length;
 
   return (
-    <nav style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "15px 30px",
-      backgroundColor: "#1e1e24",
-      color: "white",
-      position: "relative",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      zIndex: 40
-    }}>
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Link href="/dashboard" style={{ color: "white", textDecoration: "none", fontWeight: pathname === "/dashboard" ? "bold" : "normal" }}>Dashboard</Link>
-        <Link href="/eventi" style={{ color: "white", textDecoration: "none", fontWeight: pathname === "/eventi" ? "bold" : "normal" }}>Eventi</Link>
-        <Link href="/match" style={{ color: "white", textDecoration: "none", fontWeight: pathname === "/match" ? "bold" : "normal" }}>Match</Link>
-      </div>
+    <nav className="fixed bottom-0 left-0 right-0 md:static md:w-64 md:h-screen bg-[#1e1e24] flex flex-row md:flex-col items-center md:items-start justify-around md:justify-start px-2 py-3 md:p-6 z-50 border-t md:border-t-0 md:border-r border-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.3)] md:shadow-none transition-all duration-300">
       
-      <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", fontWeight: "bold", fontSize: "1.2rem" }}>
-        <Link href="/musicisti" style={{ color: "white", textDecoration: "none" }}>MusicMatch</Link>
+      {/* Logo Desktop Solo */}
+      <div className="hidden md:flex mb-10 w-full items-center justify-start">
+        <Link href="/musicisti" className="text-2xl font-bold tracking-wide no-underline">
+          <div className="bg-gradient-to-r from-[#3b38f6] to-[#c314f5] text-white px-3 py-1">
+            MusicMatch
+          </div>
+        </Link>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        {/* Dropdown Notifiche */}
-        <div id="notifiche-dropdown-container" style={{ position: "relative" }}>
+      {/* Nav Links */}
+      <div className="flex flex-row md:flex-col gap-2 md:gap-4 w-full justify-around md:justify-start flex-1">
+        
+        <Link href="/dashboard" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/dashboard" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+          <span className="text-[10px] md:text-base font-medium hidden md:block">Dashboard</span>
+        </Link>
+
+        <Link href="/musicisti" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/musicisti" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <span className="text-[10px] md:text-base font-medium hidden md:block">Musicisti</span>
+        </Link>
+
+        <Link href="/eventi" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/eventi" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+          <span className="text-[10px] md:text-base font-medium hidden md:block">Eventi</span>
+        </Link>
+
+        <Link href="/match" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/match" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+          <span className="text-[10px] md:text-base font-medium hidden md:block">Match</span>
+        </Link>
+
+      </div>
+
+      {/* Notifiche & Profilo */}
+      <div className="flex flex-row md:flex-col md:w-full items-center md:items-stretch gap-2 md:gap-4 md:mt-auto">
+        
+        <div id="notifiche-dropdown-container" className="relative flex items-center justify-center md:justify-start w-full">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "white",
-              cursor: "pointer",
-              position: "relative",
-              padding: "6px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "50%",
-              transition: "background-color 0.2s"
-            }}
-            className="hover:bg-slate-700/50"
+            className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors w-full justify-center md:justify-start ${showDropdown ? "text-white md:bg-white/10" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
             title="Notifiche"
           >
-            {/* SVG Campanella */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-            </svg>
-
-            {/* Badge Notifiche Non Lette */}
-            {unreadCount > 0 && (
-              <span
-                style={{
-                  position: "absolute",
-                  top: "0px",
-                  right: "0px",
-                  backgroundColor: "#ef4444",
-                  color: "white",
-                  fontSize: "9px",
-                  fontWeight: "bold",
-                  borderRadius: "50%",
-                  minWidth: "15px",
-                  height: "15px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "0 3px",
-                  border: "1.5px solid #1e1e24"
-                }}
-              >
-                {unreadCount}
-              </span>
-            )}
+            <div className="relative">
+              <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#c314f5] text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-[3px] border border-[#1e1e24]">
+                  {unreadCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] md:text-base font-medium hidden md:block">Notifiche</span>
           </button>
 
-          {/* Menu Dropdown */}
+          {/* Menu Dropdown Notifiche */}
           {showDropdown && (
-            <div
-              style={{
-                position: "absolute",
-                right: 0,
-                top: "40px",
-                width: "320px",
-                backgroundColor: "#2d2d3a",
-                border: "1px solid #3f3f50",
-                borderRadius: "8px",
-                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.3)",
-                zIndex: 50,
-                color: "white",
-                overflow: "hidden"
-              }}
-            >
+            <div className="absolute bottom-14 md:bottom-auto md:top-0 left-1/2 md:left-full -translate-x-1/2 md:translate-x-0 md:ml-4 w-[90vw] md:w-80 bg-[#2d2d3a] border border-[#3f3f50] rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] z-[60] text-white overflow-hidden max-w-[320px]">
               {/* Header */}
-              <div
-                style={{
-                  padding: "12px 16px",
-                  borderBottom: "1px solid #3f3f50",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: "#22222a"
-                }}
-              >
-                <span style={{ fontWeight: "600", fontSize: "14px" }}>Notifiche</span>
+              <div className="px-4 py-3 border-b border-[#3f3f50] flex justify-between items-center bg-[#22222a]">
+                <span className="font-semibold text-sm">Notifiche</span>
                 {unreadCount > 0 && (
-                  <button
-                    onClick={segnaTutteComeLette}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#60a5fa",
-                      fontSize: "11px",
-                      cursor: "pointer",
-                      fontWeight: "500",
-                      padding: 0
-                    }}
-                    className="hover:underline"
-                  >
-                    Segna tutte come lette
+                  <button onClick={segnaTutteComeLette} className="text-blue-400 text-xs hover:underline">
+                    Segna lette
                   </button>
                 )}
               </div>
 
               {/* Lista */}
-              <div style={{ maxHeight: "280px", overflowY: "auto" }}>
+              <div className="max-h-[60vh] md:max-h-72 overflow-y-auto">
                 {notifiche.length === 0 ? (
-                  <div style={{ padding: "30px 15px", textAlign: "center", color: "#9ca3af" }}>
-                    <p style={{ fontSize: "13px", margin: 0 }}>Non hai notifiche</p>
+                  <div className="p-8 text-center text-gray-400 text-sm">
+                    Non hai notifiche
                   </div>
                 ) : (
                   notifiche.slice(0, 5).map((n) => (
-                    <div
-                      key={n.idNotifica}
-                      style={{
-                        padding: "12px 16px",
-                        borderBottom: "1px solid #3f3f50",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "6px",
-                        backgroundColor: n.letta ? "transparent" : "rgba(59, 130, 246, 0.08)",
-                        transition: "background-color 0.2s"
-                      }}
-                      className="hover:bg-slate-700/30"
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-                        <p style={{
-                          fontSize: "12px",
-                          margin: 0,
-                          color: n.letta ? "#cbd5e1" : "#f1f5f9",
-                          fontWeight: n.letta ? "normal" : "600",
-                          wordBreak: "break-word",
-                          lineHeight: "1.4"
-                        }}>
+                    <div key={n.idNotifica} className={`p-4 border-b border-[#3f3f50] flex flex-col gap-2 transition-colors ${n.letta ? "hover:bg-white/5" : "bg-blue-500/10 hover:bg-blue-500/20"}`}>
+                      <div className="flex justify-between gap-3">
+                        <p className={`text-sm m-0 leading-relaxed ${n.letta ? "text-gray-300 font-normal" : "text-white font-semibold"}`}>
                           {n.messaggio}
                         </p>
                         {!n.letta && (
-                          <button
-                            onClick={() => segnaComeLetta(n.idNotifica)}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              padding: "2px",
-                              alignSelf: "flex-start",
-                              display: "flex"
-                            }}
-                            title="Segna come letta"
-                          >
-                            <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#3b82f6", display: "inline-block" }}></span>
+                          <button onClick={() => segnaComeLetta(n.idNotifica)} className="shrink-0 p-1 mt-1" title="Segna come letta">
+                            <span className="block w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                           </button>
                         )}
                       </div>
-                      <span style={{ fontSize: "10px", color: "#94a3b8" }}>
+                      <span className="text-xs text-gray-400">
                         {formattaData(n.dataCreazione)}
                       </span>
                     </div>
@@ -304,25 +211,8 @@ export default function Navbar() {
               </div>
 
               {/* Footer */}
-              <div
-                style={{
-                  padding: "10px",
-                  textAlign: "center",
-                  borderTop: "1px solid #3f3f50",
-                  backgroundColor: "#22222a"
-                }}
-              >
-                <Link
-                  href="/notifiche"
-                  onClick={() => setShowDropdown(false)}
-                  style={{
-                    color: "#60a5fa",
-                    fontSize: "12px",
-                    fontWeight: "600",
-                    textDecoration: "none"
-                  }}
-                  className="hover:underline"
-                >
+              <div className="p-3 text-center border-t border-[#3f3f50] bg-[#22222a]">
+                <Link href="/notifiche" onClick={() => setShowDropdown(false)} className="text-blue-400 text-sm font-semibold hover:underline">
                   Vedi tutte le notifiche
                 </Link>
               </div>
@@ -330,7 +220,11 @@ export default function Navbar() {
           )}
         </div>
 
-        <Link href="/profilo" style={{ color: "white", textDecoration: "none", fontWeight: pathname === "/profilo" ? "bold" : "normal" }}>Profilo</Link>
+        <Link href="/profilo" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/profilo" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          <span className="text-[10px] md:text-base font-medium hidden md:block">Profilo</span>
+        </Link>
+
       </div>
     </nav>
   );
