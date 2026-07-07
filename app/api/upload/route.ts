@@ -1,73 +1,58 @@
-import { writeFile } from "fs/promises";
+import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
-import path from "path";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(
   request: Request
 ) {
   try {
-
-    const formData =
-      await request.formData();
-
-    const file =
-      formData.get("file") as File;
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
 
     if (!file) {
       return Response.json(
-        {
-          error: "Nessun file ricevuto"
-        },
-        {
-          status: 400
-        }
+        { error: "Nessun file ricevuto" },
+        { status: 400 }
       );
     }
 
-    const bytes =
-      await file.arrayBuffer();
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-    const buffer =
-      Buffer.from(bytes);
+    const nomeFile = `${uuidv4()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
 
-    const nomeFile =
-      `${uuidv4()}-${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("uploads")
+      .upload(nomeFile, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
 
-    const percorso =
-      path.join(
-        process.cwd(),
-        "public",
-        "uploads",
-        nomeFile
+    if (error) {
+      console.error("Errore Supabase:", error);
+      return Response.json(
+        { error: "Errore durante il salvataggio su Supabase" },
+        { status: 500 }
       );
+    }
 
-    console.log("PERCORSO:", percorso);
-
-	await writeFile(
-	  percorso,
-	  buffer
-	);
-
-	console.log("FILE SALVATO");
+    const { data: publicUrlData } = supabase.storage
+      .from("uploads")
+      .getPublicUrl(nomeFile);
 
     return Response.json({
-      source:
-        `/uploads/${nomeFile}`
+      source: publicUrlData.publicUrl
     });
 
   } catch (error) {
-
     console.error(error);
-
     return Response.json(
-      {
-        error:
-          "Errore upload"
-      },
-      {
-        status: 500
-      }
+      { error: "Errore upload" },
+      { status: 500 }
     );
-
   }
 }
