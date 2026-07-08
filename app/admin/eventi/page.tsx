@@ -83,12 +83,12 @@ export default function GestioneEventiPage() {
   if (!admin) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen bg-[#12121a] text-white flex">
       <AdminSidebar />
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
         <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Eventi</h1>
-          <p className="text-zinc-400 text-sm mt-1">Monitora tutti gli eventi creati nella community ed elimina quelli inappropriati.</p>
+          <p className="text-gray-400 text-sm mt-1">Monitora tutti gli eventi creati nella community ed elimina quelli inappropriati.</p>
         </div>
 
         {messaggio && (
@@ -99,14 +99,14 @@ export default function GestioneEventiPage() {
           </div>
         )}
 
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
-            <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
+        <div className="bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl shadow-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#2d2d3a] bg-[#1e1e24]/80 flex items-center justify-between">
+            <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
               Elenco Eventi ({eventi.length})
             </h2>
             <button
               onClick={caricaEventi}
-              className="text-xs text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-1.5 cursor-pointer"
+              className="text-xs text-[#0ea5e9] hover:text-[#38bdf8] font-semibold flex items-center gap-1.5 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18v3z" />
@@ -119,11 +119,11 @@ export default function GestioneEventiPage() {
             {loading ? (
               <div className="p-6 space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-12 bg-zinc-800/30 rounded-xl animate-pulse" />
+                  <div key={i} className="h-12 bg-[#2d2d3a]/30 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : eventi.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+              <div className="flex flex-col items-center justify-center py-20 text-gray-500">
                 <svg className="w-12 h-12 mb-3 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -132,7 +132,7 @@ export default function GestioneEventiPage() {
             ) : (
               <table className="w-full border-collapse text-left">
                 <thead>
-                   <tr className="border-b border-zinc-800 text-xs font-semibold text-zinc-400 uppercase tracking-wider bg-zinc-900/20">
+                   <tr className="border-b border-[#2d2d3a] text-xs font-semibold text-gray-400 uppercase tracking-wider bg-[#1e1e24]/20">
                      <th className="px-6 py-4">Titolo</th>
                      <th className="px-6 py-4 hidden sm:table-cell">Luogo</th>
                      <th className="px-6 py-4 hidden md:table-cell">Data</th>
@@ -148,10 +148,10 @@ export default function GestioneEventiPage() {
 
                     return (
                       <Fragment key={e.idEvento}>
-                         <tr className={`hover:bg-zinc-800/20 transition-colors ${isExpanded ? "bg-zinc-900/30" : ""}`}>
+                         <tr className={`hover:bg-[#2d2d3a]/20 transition-colors ${isExpanded ? "bg-[#1e1e24]/30" : ""}`}>
                            <td className="px-6 py-4 font-semibold text-white text-sm">{e.titolo}</td>
-                           <td className="px-6 py-4 text-zinc-300 text-sm hidden sm:table-cell">{e.citta?.nome || "Non specificata"}</td>
-                           <td className="px-6 py-4 text-zinc-400 text-sm hidden md:table-cell">
+                           <td className="px-6 py-4 text-gray-300 text-sm hidden sm:table-cell">{e.citta?.nome || "Non specificata"}</td>
+                           <td className="px-6 py-4 text-gray-400 text-sm hidden md:table-cell">
                              {new Date(e.data).toLocaleDateString("it-IT", {
                                day: "numeric",
                                month: "short",
@@ -161,18 +161,18 @@ export default function GestioneEventiPage() {
                              })}
                            </td>
                            <td className="px-6 py-4 text-sm hidden lg:table-cell">
-                             <span className="px-2 py-1 rounded bg-zinc-800 text-zinc-300 border border-zinc-700/50">
+                             <span className="px-2 py-1 rounded bg-[#2d2d3a] text-gray-300 border border-[#3f3f50]/50">
                                {creatore}
                              </span>
                            </td>
-                           <td className="px-6 py-4 text-center text-zinc-300 font-bold text-sm hidden sm:table-cell">
+                           <td className="px-6 py-4 text-center text-gray-300 font-bold text-sm hidden sm:table-cell">
                              {e._count?.partecipanti ?? 0}
                            </td>
                            <td className="px-6 py-4 text-right">
                             <div className="flex justify-end gap-3">
                               <button
                                 onClick={() => toggleExpand(e.idEvento)}
-                                className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                                className="px-3 py-1.5 bg-[#2d2d3a] hover:bg-[#3f3f50] text-gray-300 rounded-lg text-xs font-semibold transition-all cursor-pointer"
                               >
                                 {isExpanded ? "Nascondi" : "Dettaglio"}
                               </button>
@@ -189,26 +189,26 @@ export default function GestioneEventiPage() {
 
                         {isExpanded && (
                           <tr>
-                            <td colSpan={6} className="px-6 py-4 bg-zinc-900/30 border-b border-zinc-800/50">
+                            <td colSpan={6} className="px-6 py-4 bg-[#1e1e24]/30 border-b border-[#2d2d3a]/50">
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
                                 <div className="md:col-span-2 space-y-2">
-                                  <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Descrizione Evento</h4>
-                                  <p className="text-zinc-300 leading-relaxed">
+                                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Descrizione Evento</h4>
+                                  <p className="text-gray-300 leading-relaxed">
                                     {e.descrizione || "Nessuna descrizione specificata per questo evento."}
                                   </p>
                                 </div>
                                 <div className="space-y-4">
                                   <div>
-                                    <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Coordinate Geografiche</h4>
-                                    <p className="text-zinc-400 mt-1">
+                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Coordinate Geografiche</h4>
+                                    <p className="text-gray-400 mt-1">
                                       {e.lat !== null && e.long !== null
                                         ? `Lat: ${e.lat.toFixed(4)} / Long: ${e.long.toFixed(4)}`
                                         : "Non specificate"}
                                     </p>
                                   </div>
                                   <div>
-                                    <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-wider">ID Evento</h4>
-                                    <p className="text-zinc-400 mt-1 font-mono text-xs">#{e.idEvento}</p>
+                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">ID Evento</h4>
+                                    <p className="text-gray-400 mt-1 font-mono text-xs">#{e.idEvento}</p>
                                   </div>
                                 </div>
                               </div>

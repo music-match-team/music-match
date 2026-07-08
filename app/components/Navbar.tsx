@@ -8,12 +8,19 @@ export default function Navbar() {
   const pathname = usePathname();
   const [utente, setUtente] = useState<any>(null);
   const [notifiche, setNotifiche] = useState<any[]>([]);
+  const [dashboard, setDashboard] = useState<any>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const u = JSON.parse(localStorage.getItem("utente") || "null");
-    setUtente(u);
-  }, [pathname]);
+    const aggiornaUtente = () => {
+      const u = JSON.parse(localStorage.getItem("utente") || "null");
+      setUtente(u);
+    };
+    aggiornaUtente();
+
+    window.addEventListener("utenteAggiornato", aggiornaUtente);
+    return () => window.removeEventListener("utenteAggiornato", aggiornaUtente);
+  }, []);
 
   const caricaNotifiche = async (userId: number) => {
     try {
@@ -27,12 +34,26 @@ export default function Navbar() {
     }
   };
 
+  const caricaDashboard = async (userId: number) => {
+    try {
+      const response = await fetch(`/api/dashboard?idUtente=${userId}`, { cache: 'no-store' });
+      if (response.ok) {
+        const data = await response.json();
+        setDashboard(data);
+      }
+    } catch (e) {
+      console.error("Errore nel caricamento dashboard:", e);
+    }
+  };
+
   useEffect(() => {
     if (!utente) return;
     caricaNotifiche(utente.idUtente);
+    caricaDashboard(utente.idUtente);
 
     const interval = setInterval(() => {
       caricaNotifiche(utente.idUtente);
+      caricaDashboard(utente.idUtente);
     }, 15000); // Poll ogni 15s
 
     return () => clearInterval(interval);
@@ -89,70 +110,108 @@ export default function Navbar() {
     const ora = data.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
     const diffMs = Date.now() - data.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return "Adesso";
     if (diffMins < 60) return `${diffMins} min fa`;
-    
+
     const oggi = new Date();
     const ieri = new Date(oggi);
     ieri.setDate(oggi.getDate() - 1);
-    
+
     if (data.toDateString() === oggi.toDateString()) {
       return `Oggi, ${ora}`;
     }
     if (data.toDateString() === ieri.toDateString()) {
       return `Ieri, ${ora}`;
     }
-    
+
     return `${data.toLocaleDateString("it-IT")} ${ora}`;
   };
 
-  if (!utente || pathname.startsWith("/admin")) {
+  if (!utente || pathname.startsWith("/admin") || pathname === "/login" || pathname === "/register" || pathname === "/") {
     return null;
   }
 
   const unreadCount = notifiche.filter(n => !n.letta).length;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 md:static md:w-64 md:h-screen bg-[#1e1e24] flex flex-row md:flex-col items-center md:items-start justify-around md:justify-start px-2 py-3 md:p-6 z-50 border-t md:border-t-0 md:border-r border-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.3)] md:shadow-none transition-all duration-300">
-      
+    <nav className="fixed bottom-4 left-4 right-4 md:bottom-0 md:left-0 md:right-0 md:static md:w-64 md:h-screen bg-zinc-900/90 backdrop-blur-xl md:bg-[#1e1e24] flex flex-row md:flex-col items-center md:items-start justify-around md:justify-start px-4 py-3 md:p-6 z-50 rounded-2xl md:rounded-none border border-zinc-800 md:border-y-0 md:border-l-0 md:border-r shadow-2xl md:shadow-none transition-all duration-300">
+
       {/* Logo Desktop Solo */}
       <div className="hidden md:flex mb-10 w-full items-center justify-start">
-        <Link href="/musicisti" className="text-2xl font-bold tracking-wide no-underline">
-          <div className="bg-gradient-to-r from-[#3b38f6] to-[#c314f5] text-white px-3 py-1">
-            MusicMatch
-          </div>
+        <Link href="/musicisti" className="flex items-center justify-center py-2 no-underline">
+          <img src="/logo.png" alt="Music match logo" className="h-10 md:h-12 w-auto object-contain" />
         </Link>
       </div>
 
       {/* Nav Links */}
       <div className="flex flex-row md:flex-col gap-2 md:gap-4 w-full justify-around md:justify-start flex-1">
-        
-        <Link href="/dashboard" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/dashboard" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+
+        {/* MUSICISTI */}
+        <Link href="/musicisti" className={`order-3 md:order-1 absolute left-1/2 -translate-x-1/2 -top-6 md:static md:translate-x-0 md:transform-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-4 md:p-2 rounded-full md:rounded-lg transition-all shadow-xl z-20 border-[5px] border-[#16161a] md:border md:shadow-none md:mb-2 ${pathname === "/musicisti" ? "bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white shadow-[#0ea5e9]/60 md:bg-none md:bg-white/10 md:border-[#0ea5e9]/50 md:text-[#0ea5e9]" : "bg-gradient-to-r from-[#0ea5e9]/90 to-[#0284c7]/90 text-white hover:from-[#0ea5e9] hover:to-[#0284c7] hover:text-white shadow-[#0ea5e9]/30 hover:-translate-y-1 md:hover:-translate-y-0 md:bg-none md:bg-transparent md:border-zinc-700/50 md:text-gray-300 md:hover:bg-white/5 md:hover:border-zinc-500"}`}>
+          <svg className="w-8 h-8 md:w-5 md:h-5 md:text-[#0ea5e9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <span className="text-[10px] md:text-base font-bold hidden md:block">Musicisti</span>
+        </Link>
+
+        {/* DASHBOARD */}
+        <Link href="/dashboard" className={`order-1 md:order-2 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/dashboard" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
           <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-          <span className="text-[10px] md:text-base font-medium hidden md:block">Dashboard</span>
+          <span className="text-[10px] md:text-base font-medium block">Dashboard</span>
         </Link>
 
-        <Link href="/musicisti" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/musicisti" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
-          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-          <span className="text-[10px] md:text-base font-medium hidden md:block">Musicisti</span>
-        </Link>
-
-        <Link href="/eventi" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/eventi" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+        {/* EVENTI */}
+        <Link href="/eventi" className={`order-2 md:order-3 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/eventi" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
           <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <span className="text-[10px] md:text-base font-medium hidden md:block">Eventi</span>
+          <span className="text-[10px] md:text-base font-medium block">Eventi</span>
         </Link>
 
-        <Link href="/match" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/match" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
-          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-          <span className="text-[10px] md:text-base font-medium hidden md:block">Match</span>
+        {/* Placeholder div on mobile to reserve space for the absolute centered button */}
+        <div className="w-12 h-10 md:hidden pointer-events-none order-4"></div>
+
+        {/* MATCH */}
+        <Link href="/match" className={`order-5 md:order-5 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/match" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+          <span className="text-[10px] md:text-base font-medium block">Match</span>
         </Link>
+
+        {/* Shortcuts Desktop (Sidebar) */}
+        {dashboard && (dashboard.recentMatches?.length > 0 || dashboard.upcomingEvents?.length > 0) && (
+          <div className="hidden md:flex flex-col gap-5 mt-6 pt-6 border-t border-[#3f3f50] w-full px-1 order-10">
+            
+            {dashboard.recentMatches?.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider mb-1">Chat Recenti</span>
+                {dashboard.recentMatches.map((m: any) => (
+                  <Link href="/match" key={m.idMatch} className="flex items-center gap-2.5 p-1.5 -mx-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={m.otherUser.username}>
+                    <div className="w-7 h-7 rounded-full overflow-hidden bg-[#2d2d3a] shrink-0 border border-[#3f3f50]">
+                      {m.otherUser.immagineProfilo ? <img src={m.otherUser.immagineProfilo} alt="Profilo" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center font-bold text-[10px] text-gray-400">{m.otherUser.username.charAt(0).toUpperCase()}</div>}
+                    </div>
+                    <span className="text-[13px] text-gray-300 font-medium truncate">{m.otherUser.username}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {dashboard.upcomingEvents?.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider mb-1">Prossimi Eventi</span>
+                {dashboard.upcomingEvents.map((e: any) => (
+                  <Link href="/eventi" key={e.idEvento} className="flex flex-col gap-1 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={e.titolo}>
+                    <span className="text-[13px] text-gray-300 font-medium truncate">{e.titolo}</span>
+                    <span className="text-[10px] text-[#0ea5e9] truncate opacity-90">{new Date(e.data).toLocaleDateString()} • {e.citta?.nome || "Online"}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+          </div>
+        )}
 
       </div>
 
       {/* Notifiche & Profilo */}
       <div className="flex flex-row md:flex-col md:w-full items-center md:items-stretch gap-2 md:gap-4 md:mt-auto">
-        
+
         <div id="notifiche-dropdown-container" className="relative flex items-center justify-center md:justify-start w-full">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
@@ -162,17 +221,17 @@ export default function Navbar() {
             <div className="relative">
               <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#c314f5] text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-[3px] border border-[#1e1e24]">
+                <span className="absolute -top-1 -right-1 bg-[#0ea5e9] text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-[3px] border border-[#1e1e24]">
                   {unreadCount}
                 </span>
               )}
             </div>
-            <span className="text-[10px] md:text-base font-medium hidden md:block">Notifiche</span>
+            <span className="text-[10px] md:text-base font-medium block">Notifiche</span>
           </button>
 
           {/* Menu Dropdown Notifiche */}
           {showDropdown && (
-            <div className="absolute bottom-14 md:bottom-auto md:top-0 left-1/2 md:left-full -translate-x-1/2 md:translate-x-0 md:ml-4 w-[90vw] md:w-80 bg-[#2d2d3a] border border-[#3f3f50] rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] z-[60] text-white overflow-hidden max-w-[320px]">
+            <div className="absolute bottom-[calc(100%+1rem)] right-0 md:top-auto md:bottom-0 md:right-auto md:left-[calc(100%+1rem)] w-[90vw] md:w-80 max-w-[350px] bg-[#2d2d3a] border border-[#3f3f50] rounded-xl shadow-2xl z-[100] text-white overflow-hidden">
               {/* Header */}
               <div className="px-4 py-3 border-b border-[#3f3f50] flex justify-between items-center bg-[#22222a]">
                 <span className="font-semibold text-sm">Notifiche</span>
@@ -219,11 +278,6 @@ export default function Navbar() {
             </div>
           )}
         </div>
-
-        <Link href="/profilo" className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/profilo" ? "text-[#c314f5] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
-          <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-          <span className="text-[10px] md:text-base font-medium hidden md:block">Profilo</span>
-        </Link>
 
       </div>
     </nav>

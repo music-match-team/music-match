@@ -98,12 +98,12 @@ export default function SegnalazioniPage() {
   if (!admin) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen bg-[#12121a] text-white flex">
       <AdminSidebar />
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
         <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Segnalazioni</h1>
-          <p className="text-zinc-400 text-sm mt-1">Esamina le segnalazioni degli utenti e prendi provvedimenti.</p>
+          <p className="text-gray-400 text-sm mt-1">Esamina le segnalazioni degli utenti e prendi provvedimenti.</p>
         </div>
 
         {messaggio && (
@@ -116,9 +116,9 @@ export default function SegnalazioniPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Lista segnalazioni (colonna sinistra) */}
-          <div className={`lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden ${selected ? "hidden lg:block" : "block"}`}>
-            <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-900/80">
-              <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
+          <div className={`lg:col-span-2 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl overflow-hidden ${selected ? "hidden lg:block" : "block"}`}>
+            <div className="px-5 py-4 border-b border-[#2d2d3a] bg-[#1e1e24]/80">
+              <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
                 Ticket ({segnalazioni.length})
               </h2>
             </div>
@@ -126,11 +126,11 @@ export default function SegnalazioniPage() {
               {loading ? (
                 <div className="space-y-0">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-20 bg-zinc-800/30 animate-pulse" />
+                    <div key={i} className="h-20 bg-[#2d2d3a]/30 animate-pulse" />
                   ))}
                 </div>
               ) : segnalazioni.length === 0 ? (
-                <p className="text-zinc-500 text-sm py-10 text-center">Nessuna segnalazione presente.</p>
+                <p className="text-gray-500 text-sm py-10 text-center">Nessuna segnalazione presente.</p>
               ) : (
                 segnalazioni.map((s) => (
                   <button
@@ -138,19 +138,19 @@ export default function SegnalazioniPage() {
                     onClick={() => setSelected(s)}
                     className={`w-full text-left px-5 py-4 transition-all cursor-pointer ${
                       selected?.idSegnalazione === s.idSegnalazione
-                        ? "bg-violet-600/10 border-l-2 border-l-violet-500"
-                        : "hover:bg-zinc-800/50 border-l-2 border-l-transparent"
+                        ? "bg-[#0ea5e9]/10 border-l-2 border-l-violet-500"
+                        : "hover:bg-[#2d2d3a]/50 border-l-2 border-l-transparent"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-zinc-200 truncate">
+                      <p className="text-sm font-semibold text-gray-200 truncate">
                         #{s.idSegnalazione} — {s.destinatario.username}
                       </p>
-                      <span className="text-[10px] text-zinc-500 whitespace-nowrap ml-2">
+                      <span className="text-[10px] text-gray-500 whitespace-nowrap ml-2">
                         {new Date(s.data).toLocaleDateString("it-IT")}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-500 mt-1 truncate">
+                    <p className="text-xs text-gray-500 mt-1 truncate">
                       da {s.mittente.username}: {s.motivo}
                     </p>
                   </button>
@@ -160,9 +160,9 @@ export default function SegnalazioniPage() {
           </div>
 
           {/* Dettaglio segnalazione (colonna destra) */}
-          <div className={`lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 ${!selected ? "hidden lg:block" : "block"}`}>
+          <div className={`lg:col-span-3 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 ${!selected ? "hidden lg:block" : "block"}`}>
             {!selected ? (
-              <div className="flex flex-col items-center justify-center h-full py-20 text-zinc-500">
+              <div className="flex flex-col items-center justify-center h-full py-20 text-gray-500">
                 <svg className="w-12 h-12 mb-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
@@ -175,7 +175,7 @@ export default function SegnalazioniPage() {
                     {/* Pulsante Indietro per Mobile */}
                     <button
                       onClick={() => setSelected(null)}
-                      className="lg:hidden mb-4 flex items-center gap-1.5 text-xs text-violet-400 hover:text-violet-300 font-semibold cursor-pointer"
+                      className="lg:hidden mb-4 flex items-center gap-1.5 text-xs text-[#0ea5e9] hover:text-[#38bdf8] font-semibold cursor-pointer"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -185,7 +185,7 @@ export default function SegnalazioniPage() {
                     <h2 className="text-xl font-bold text-white">
                       Segnalazione #{selected.idSegnalazione}
                     </h2>
-                    <p className="text-xs text-zinc-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1">
                       {new Date(selected.data).toLocaleString("it-IT")}
                     </p>
                   </div>
@@ -195,26 +195,26 @@ export default function SegnalazioniPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-1">Segnalante</p>
-                    <p className="text-sm font-bold text-zinc-200">{selected.mittente.username}</p>
-                    <p className="text-xs text-zinc-500">{selected.mittente.email}</p>
+                  <div className="bg-[#12121a] border border-[#3f3f50]/40 rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Segnalante</p>
+                    <p className="text-sm font-bold text-gray-200">{selected.mittente.username}</p>
+                    <p className="text-xs text-gray-500">{selected.mittente.email}</p>
                   </div>
-                  <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-1">Segnalato</p>
+                  <div className="bg-[#12121a] border border-[#3f3f50]/40 rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Segnalato</p>
                     <p className="text-sm font-bold text-amber-300">{selected.destinatario.username}</p>
-                    <p className="text-xs text-zinc-500">{selected.destinatario.email}</p>
+                    <p className="text-xs text-gray-500">{selected.destinatario.email}</p>
                   </div>
                 </div>
 
-                <div className="bg-zinc-800/40 border border-zinc-700/40 rounded-xl p-4">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Motivo della Segnalazione</p>
-                  <p className="text-sm text-zinc-200 leading-relaxed">{selected.motivo}</p>
+                <div className="bg-[#12121a] border border-[#3f3f50]/40 rounded-xl p-4">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Motivo della Segnalazione</p>
+                  <p className="text-sm text-gray-200 leading-relaxed">{selected.motivo}</p>
                 </div>
 
                 {/* Azioni */}
-                <div className="border-t border-zinc-800 pt-5">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-3">Azioni Disponibili</p>
+                <div className="border-t border-[#2d2d3a] pt-5">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Azioni Disponibili</p>
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={() => sanzionaUtente(selected.destinatario.idUtente, "SOSPENSIONE")}
@@ -230,7 +230,7 @@ export default function SegnalazioniPage() {
                     </button>
                     <button
                       onClick={() => eliminaSegnalazione(selected.idSegnalazione)}
-                      className="px-4 py-2.5 bg-zinc-800/50 border border-zinc-700/50 text-zinc-300 rounded-lg text-sm font-semibold hover:bg-zinc-700/50 transition-all cursor-pointer"
+                      className="px-4 py-2.5 bg-[#2d2d3a]/50 border border-[#3f3f50]/50 text-gray-300 rounded-lg text-sm font-semibold hover:bg-[#3f3f50]/50 transition-all cursor-pointer"
                     >
                       Archivia Segnalazione
                     </button>

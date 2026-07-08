@@ -62,17 +62,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[#12121a] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
       
       {/* Luci d'ambiente decorative */}
-      <div className="absolute top-1/3 right-1/4 translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-violet-650/10 blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/3 left-1/4 -translate-x-1/2 translate-y-1/2 w-96 h-96 rounded-full bg-indigo-650/10 blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/3 right-1/4 translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-[#0ea5e9]/10 blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/3 left-1/4 -translate-x-1/2 translate-y-1/2 w-96 h-96 rounded-full bg-[#0284c7]/10 blur-3xl pointer-events-none"></div>
 
       <div className="w-full max-w-md z-10 space-y-8">
 
         {/* Logo ed Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-xl shadow-violet-600/20 mb-4 hover:rotate-6 transition-transform">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] text-white shadow-xl shadow-[#0ea5e9]/20 mb-4 hover:rotate-6 transition-transform">
             <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
@@ -80,20 +80,20 @@ export default function RegisterPage() {
           <h2 className="text-3xl font-extrabold text-white tracking-tight">
             Crea il tuo account
           </h2>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm text-gray-400">
             Unisciti a MusicMatch e connettiti con musicisti nella tua città
           </p>
         </div>
 
         {/* Card del modulo di registrazione */}
-        <div className="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
+        <div className="bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-8 shadow-2xl">
 
           {/* Banner messaggio (errore o successo) */}
           {messaggio && (
             <div className={`mb-6 p-3 rounded-lg text-sm font-medium flex items-center gap-2 border ${
               isError
-                ? "bg-red-950/40 border-red-800/85 text-red-300"
-                : "bg-emerald-950/40 border-emerald-800/80 text-emerald-300"
+                ? "bg-red-900/20 border-red-800/50 text-red-400"
+                : "bg-emerald-900/20 border-emerald-800/50 text-emerald-400"
             }`}>
               {isError ? (
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,11 +112,11 @@ export default function RegisterPage() {
 
             {/* Username */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 Username
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                   placeholder="il_tuo_nome_arte"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -134,11 +134,11 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 Email
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
@@ -148,7 +148,7 @@ export default function RegisterPage() {
                   placeholder="nome@esempio.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -156,11 +156,11 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zM12 11V7a4 4 0 018 0v4h-8z" />
                   </svg>
@@ -170,13 +170,13 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-12 py-3 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-12 py-3 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-white transition-colors cursor-pointer"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,13 +193,13 @@ export default function RegisterPage() {
             </div>
 
             {/* Termini di servizio */}
-            <p className="text-xs text-zinc-500 leading-relaxed">
+            <p className="text-xs text-gray-500 leading-relaxed">
               Registrandoti accetti i nostri{" "}
-              <span className="text-violet-400 hover:text-violet-300 cursor-pointer transition-colors">
+              <span className="text-[#0ea5e9] hover:text-[#38bdf8] cursor-pointer transition-colors">
                 Termini di Servizio
               </span>{" "}
               e la nostra{" "}
-              <span className="text-violet-400 hover:text-violet-300 cursor-pointer transition-colors">
+              <span className="text-[#0ea5e9] hover:text-[#38bdf8] cursor-pointer transition-colors">
                 Privacy Policy
               </span>
               .
@@ -210,7 +210,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full py-3 px-4 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 hover:shadow-[#0ea5e9]/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isSubmitting ? (
                   <>
@@ -228,14 +228,14 @@ export default function RegisterPage() {
           </form>
 
           {/* Link al Login */}
-          <div className="mt-8 text-center border-t border-zinc-800/80 pt-6">
-            <p className="text-sm text-zinc-400 font-medium">
+          <div className="mt-8 text-center border-t border-[#2d2d3a] pt-6">
+            <p className="text-sm text-gray-400 font-medium">
               Hai già un account?
             </p>
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="mt-2 text-sm font-bold text-violet-400 hover:text-violet-300 hover:underline cursor-pointer transition-colors"
+              className="mt-2 text-sm font-bold text-[#0ea5e9] hover:text-[#38bdf8] hover:underline cursor-pointer transition-colors"
             >
               Accedi ora
             </button>

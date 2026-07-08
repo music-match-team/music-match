@@ -147,12 +147,12 @@ export default function SanzioniPage() {
   if (!admin) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen bg-[#12121a] text-white flex">
       <AdminSidebar />
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
         <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Sanzioni</h1>
-          <p className="text-zinc-400 text-sm mt-1">Emetti nuove sanzioni e visualizza lo storico dei provvedimenti applicati.</p>
+          <p className="text-gray-400 text-sm mt-1">Emetti nuove sanzioni e visualizza lo storico dei provvedimenti applicati.</p>
         </div>
 
         {messaggio && (
@@ -165,7 +165,7 @@ export default function SanzioniPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Emetti Nuova Sanzione Form */}
-          <div className="lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl h-fit">
+          <div className="lg:col-span-2 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 shadow-xl h-fit">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -176,7 +176,7 @@ export default function SanzioniPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Ricerca Utente */}
               <div className="relative">
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Seleziona Utente</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Seleziona Utente</label>
                 {!selectedUser ? (
                   <>
                     <input
@@ -188,12 +188,12 @@ export default function SanzioniPage() {
                         setShowUserDropdown(true);
                       }}
                       onFocus={() => setShowUserDropdown(true)}
-                      className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                      className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                     />
                     {showUserDropdown && searchUserQuery && (
-                      <div className="absolute z-10 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl max-h-48 overflow-y-auto divide-y divide-zinc-800/50">
+                      <div className="absolute z-10 w-full mt-1 bg-[#1e1e24] border border-[#2d2d3a] rounded-xl shadow-xl max-h-48 overflow-y-auto divide-y divide-zinc-800/50">
                         {filteredUsers.length === 0 ? (
-                          <div className="px-4 py-3 text-xs text-zinc-500">Nessun utente trovato</div>
+                          <div className="px-4 py-3 text-xs text-gray-500">Nessun utente trovato</div>
                         ) : (
                           filteredUsers.map((u: any) => (
                             <button
@@ -203,11 +203,11 @@ export default function SanzioniPage() {
                                 setSelectedUser(u);
                                 setShowUserDropdown(false);
                               }}
-                              className="w-full text-left px-4 py-2.5 text-sm text-zinc-200 hover:bg-zinc-800 transition-colors flex items-center justify-between cursor-pointer"
+                              className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-[#2d2d3a] transition-colors flex items-center justify-between cursor-pointer"
                             >
                               <div>
                                 <p className="font-semibold">{u.username}</p>
-                                <p className="text-xs text-zinc-500">{u.email}</p>
+                                <p className="text-xs text-gray-500">{u.email}</p>
                               </div>
                             </button>
                           ))
@@ -216,10 +216,10 @@ export default function SanzioniPage() {
                     )}
                   </>
                 ) : (
-                  <div className="flex items-center justify-between bg-violet-600/10 border border-violet-700/40 rounded-xl p-3.5">
+                  <div className="flex items-center justify-between bg-[#0ea5e9]/10 border border-[#0ea5e9]/40 rounded-xl p-3.5">
                     <div>
-                      <p className="text-sm font-bold text-violet-300">{selectedUser.username}</p>
-                      <p className="text-xs text-zinc-400">{selectedUser.email}</p>
+                      <p className="text-sm font-bold text-[#38bdf8]">{selectedUser.username}</p>
+                      <p className="text-xs text-gray-400">{selectedUser.email}</p>
                     </div>
                     <button
                       type="button"
@@ -237,7 +237,7 @@ export default function SanzioniPage() {
 
               {/* Tipo Sanzione */}
               <div>
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Tipo Sanzione</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Tipo Sanzione</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
@@ -245,7 +245,7 @@ export default function SanzioniPage() {
                     className={`py-2 px-4 rounded-xl border text-sm font-bold transition-all cursor-pointer text-center ${
                       tipo === "SOSPENSIONE"
                         ? "bg-amber-600/20 border-amber-700/60 text-amber-300"
-                        : "bg-zinc-800/40 border-zinc-700/40 text-zinc-400 hover:bg-zinc-800/80"
+                        : "bg-[#12121a] border-[#3f3f50]/40 text-gray-400 hover:bg-[#2d2d3a]/80"
                     }`}
                   >
                     Sospensione
@@ -256,7 +256,7 @@ export default function SanzioniPage() {
                     className={`py-2 px-4 rounded-xl border text-sm font-bold transition-all cursor-pointer text-center ${
                       tipo === "BAN"
                         ? "bg-red-600/20 border-red-700/60 text-red-300"
-                        : "bg-zinc-800/40 border-zinc-700/40 text-zinc-400 hover:bg-zinc-800/80"
+                        : "bg-[#12121a] border-[#3f3f50]/40 text-gray-400 hover:bg-[#2d2d3a]/80"
                     }`}
                   >
                     Ban Permanente
@@ -267,13 +267,13 @@ export default function SanzioniPage() {
               {/* Giorni di Sospensione */}
               {tipo === "SOSPENSIONE" && (
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Durata Sospensione (Giorni)</label>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Durata Sospensione (Giorni)</label>
                   <input
                     type="number"
                     min="1"
                     value={giorniSospensione}
                     onChange={(e) => setGiorniSospensione(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                     required
                   />
                 </div>
@@ -281,13 +281,13 @@ export default function SanzioniPage() {
 
               {/* Motivo */}
               <div>
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Motivo</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Motivo</label>
                 <textarea
                   rows={4}
                   placeholder="Inserisci la motivazione formale..."
                   value={motivo}
                   onChange={(e) => setMotivo(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm resize-none"
+                  className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm resize-none"
                   required
                 />
               </div>
@@ -296,7 +296,7 @@ export default function SanzioniPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-2.5 px-4 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                className="w-full py-2.5 px-4 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 hover:shadow-[#0ea5e9]/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
               >
                 {submitting ? "Applicazione in corso..." : "Emetti Sanzione"}
               </button>
@@ -304,9 +304,9 @@ export default function SanzioniPage() {
           </div>
 
           {/* Storico Sanzioni (colonna destra) */}
-          <div className="lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl flex flex-col">
+          <div className="lg:col-span-3 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 shadow-xl flex flex-col">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#0ea5e9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Storico Sanzioni Raggruppate per Utente
@@ -315,11 +315,11 @@ export default function SanzioniPage() {
             {loading ? (
               <div className="space-y-3 flex-1">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-14 bg-zinc-800/30 rounded-xl animate-pulse" />
+                  <div key={i} className="h-14 bg-[#2d2d3a]/30 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : listSanzioniRaggruppate.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-zinc-500 flex-1">
+              <div className="flex flex-col items-center justify-center py-20 text-gray-500 flex-1">
                 <svg className="w-12 h-12 mb-3 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -340,12 +340,12 @@ export default function SanzioniPage() {
                   return (
                     <div
                       key={item.utente.idUtente}
-                      className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden transition-all"
+                      className="bg-[#1e1e24] border border-[#2d2d3a] rounded-xl overflow-hidden transition-all"
                     >
                       {/* Accordion Trigger */}
                       <button
                         onClick={() => toggleUserAccordion(item.utente.idUtente)}
-                        className="w-full px-5 py-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors text-left cursor-pointer"
+                        className="w-full px-5 py-4 flex items-center justify-between hover:bg-[#2d2d3a]/30 transition-colors text-left cursor-pointer"
                       >
                         <div>
                           <div className="flex items-center gap-2">
@@ -356,11 +356,11 @@ export default function SanzioniPage() {
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-zinc-500 mt-0.5">{item.utente.email} • {item.sanzioni.length} sanzioni</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{item.utente.email} • {item.sanzioni.length} sanzioni</p>
                         </div>
                         <div>
                           <svg
-                            className={`w-5 h-5 text-zinc-500 transition-transform duration-200 ${
+                            className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
                               isExpanded ? "transform rotate-180" : ""
                             }`}
                             fill="none"
@@ -374,7 +374,7 @@ export default function SanzioniPage() {
 
                       {/* Accordion Content */}
                       {isExpanded && (
-                        <div className="px-5 pb-4 pt-1 border-t border-zinc-800/50 bg-zinc-900/20 divide-y divide-zinc-850">
+                        <div className="px-5 pb-4 pt-1 border-t border-[#2d2d3a]/50 bg-[#1e1e24]/20 divide-y divide-zinc-850">
                           {item.sanzioni.map((s: any) => {
                             const isBan = s.tipo === "BAN";
                             const isSospAttiva = s.tipo === "SOSPENSIONE" && (!s.dataFine || new Date(s.dataFine) > new Date());
@@ -395,12 +395,12 @@ export default function SanzioniPage() {
                                       <span className="text-[10px] text-emerald-400 font-semibold">• Attiva</span>
                                     )}
                                   </div>
-                                  <span className="text-[10px] text-zinc-500">
+                                  <span className="text-[10px] text-gray-500">
                                     Admin: {s.amministratore?.username || "Sistema"}
                                   </span>
                                 </div>
-                                <p className="text-xs text-zinc-300 font-medium">Motivo: <span className="text-zinc-400 font-normal">{s.motivo}</span></p>
-                                <div className="flex gap-4 text-[10px] text-zinc-500 mt-2">
+                                <p className="text-xs text-gray-300 font-medium">Motivo: <span className="text-gray-400 font-normal">{s.motivo}</span></p>
+                                <div className="flex gap-4 text-[10px] text-gray-500 mt-2">
                                   <p>Inizio: {new Date(s.dataInizio).toLocaleDateString("it-IT")}</p>
                                   {s.dataFine && (
                                     <p>Fine: {new Date(s.dataFine).toLocaleDateString("it-IT")}</p>

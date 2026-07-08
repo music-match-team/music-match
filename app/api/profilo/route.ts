@@ -25,6 +25,8 @@ export async function GET(request: Request) {
     }
 
     return Response.json({
+      username: utente.username,
+      immagineProfilo: utente.immagineProfilo,
       bio: utente.bio,
       livelloEsperienza: utente.livelloEsperienza,
       lat: utente.lat,
@@ -46,6 +48,8 @@ export async function POST(request: Request) {
 
     const {
       idUtente,
+      username,
+      immagineProfilo,
       bio,
       livelloEsperienza,
       strumenti,
@@ -55,11 +59,23 @@ export async function POST(request: Request) {
       citta
     } = body;
 
+    // Controllo se lo username è già in uso
+    if (username) {
+      const existingUser = await prisma.utente.findUnique({
+        where: { username }
+      });
+      if (existingUser && existingUser.idUtente !== idUtente) {
+        return Response.json({ error: "Questo username è già in uso da un altro utente." }, { status: 400 });
+      }
+    }
+
     await prisma.utente.update({
       where: {
         idUtente
       },
       data: {
+        ...(username && { username }),
+        ...(immagineProfilo !== undefined && { immagineProfilo }),
         bio,
         livelloEsperienza,
         lat,

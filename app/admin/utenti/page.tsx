@@ -173,13 +173,13 @@ export default function GestioneUtentiPage() {
   if (!admin) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex relative">
+    <div className="min-h-screen bg-[#12121a] text-white flex relative">
       <AdminSidebar />
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Utenti</h1>
-            <p className="text-zinc-400 text-sm mt-1">Cerca utenti, visualizza i loro profili, gestisci i media ed emetti sanzioni.</p>
+            <p className="text-gray-400 text-sm mt-1">Cerca utenti, visualizza i loro profili, gestisci i media ed emetti sanzioni.</p>
           </div>
         </div>
 
@@ -193,15 +193,15 @@ export default function GestioneUtentiPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Colonna Sinistra: Elenco Utenti */}
-          <div className={`lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl flex flex-col h-[700px] overflow-hidden ${selectedUserId !== null ? "hidden lg:flex" : "flex"}`}>
+          <div className={`lg:col-span-2 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl flex flex-col h-[700px] overflow-hidden ${selectedUserId !== null ? "hidden lg:flex" : "flex"}`}>
             {/* Search bar */}
-            <div className="p-4 border-b border-zinc-800 bg-zinc-900/80">
+            <div className="p-4 border-b border-[#2d2d3a] bg-[#1e1e24]/80">
               <input
                 type="text"
                 placeholder="Cerca per username o email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
               />
             </div>
 
@@ -210,11 +210,11 @@ export default function GestioneUtentiPage() {
               {loadingList ? (
                 <div className="p-4 space-y-3">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-16 bg-zinc-800/30 rounded-xl animate-pulse" />
+                    <div key={i} className="h-16 bg-[#2d2d3a]/30 rounded-xl animate-pulse" />
                   ))}
                 </div>
               ) : filteredUtenti.length === 0 ? (
-                <p className="text-zinc-500 text-sm py-10 text-center">Nessun utente trovato.</p>
+                <p className="text-gray-500 text-sm py-10 text-center">Nessun utente trovato.</p>
               ) : (
                 filteredUtenti.map((u: any) => {
                   const isSelected = selectedUserId === u.idUtente;
@@ -224,23 +224,23 @@ export default function GestioneUtentiPage() {
                       onClick={() => selectUser(u.idUtente)}
                       className={`w-full text-left px-5 py-4 transition-all cursor-pointer flex justify-between items-center ${
                         isSelected
-                          ? "bg-violet-600/10 border-l-2 border-l-violet-500"
-                          : "hover:bg-zinc-800/40 border-l-2 border-l-transparent"
+                          ? "bg-[#0ea5e9]/10 border-l-2 border-l-violet-500"
+                          : "hover:bg-[#12121a] border-l-2 border-l-transparent"
                       }`}
                     >
                       <div className="min-w-0 pr-2">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold text-zinc-200 truncate">{u.username}</p>
+                          <p className="text-sm font-semibold text-gray-200 truncate">{u.username}</p>
                           {u._count.sanzioni > 0 && (
                             <span className="px-1.5 py-0.5 bg-amber-950/40 border border-amber-900/40 text-amber-400 text-[9px] font-bold rounded-full">
                               Sanzionato
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-zinc-500 truncate mt-0.5">{u.email}</p>
+                        <p className="text-xs text-gray-500 truncate mt-0.5">{u.email}</p>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <span className="text-[10px] text-zinc-500 block">
+                        <span className="text-[10px] text-gray-500 block">
                           Città: {u.citta || "N/D"}
                         </span>
                         <span className="text-[9px] text-zinc-600 block mt-0.5">
@@ -255,9 +255,9 @@ export default function GestioneUtentiPage() {
           </div>
 
           {/* Colonna Destra: Dettagli Utente */}
-          <div className={`lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 flex flex-col h-[700px] overflow-y-auto ${selectedUserId === null ? "hidden lg:flex" : "flex"}`}>
+          <div className={`lg:col-span-3 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 flex flex-col h-[700px] overflow-y-auto ${selectedUserId === null ? "hidden lg:flex" : "flex"}`}>
             {!selectedUserId ? (
-              <div className="flex flex-col items-center justify-center h-full py-20 text-zinc-500">
+              <div className="flex flex-col items-center justify-center h-full py-20 text-gray-500">
                 <svg className="w-16 h-16 mb-3 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -266,23 +266,23 @@ export default function GestioneUtentiPage() {
             ) : loadingDetail ? (
               <div className="space-y-6 animate-pulse">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-zinc-800 rounded-full" />
+                  <div className="w-14 h-14 bg-[#2d2d3a] rounded-full" />
                   <div className="space-y-2 flex-1">
-                    <div className="h-4 bg-zinc-800 rounded w-1/3" />
-                    <div className="h-3 bg-zinc-800 rounded w-1/2" />
+                    <div className="h-4 bg-[#2d2d3a] rounded w-1/3" />
+                    <div className="h-3 bg-[#2d2d3a] rounded w-1/2" />
                   </div>
                 </div>
-                <div className="h-24 bg-zinc-800/40 rounded-xl" />
-                <div className="h-32 bg-zinc-800/40 rounded-xl" />
+                <div className="h-24 bg-[#12121a] rounded-xl" />
+                <div className="h-32 bg-[#12121a] rounded-xl" />
               </div>
             ) : userDetail ? (
               <div className="space-y-6">
                 {/* Header Dettaglio */}
-                <div className="border-b border-zinc-800 pb-5 flex flex-col gap-4">
+                <div className="border-b border-[#2d2d3a] pb-5 flex flex-col gap-4">
                   {/* Pulsante Indietro per Mobile */}
                   <button
                     onClick={() => setSelectedUserId(null)}
-                    className="lg:hidden w-fit flex items-center gap-1.5 text-xs text-violet-400 hover:text-violet-300 font-semibold cursor-pointer"
+                    className="lg:hidden w-fit flex items-center gap-1.5 text-xs text-[#0ea5e9] hover:text-[#38bdf8] font-semibold cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -291,7 +291,7 @@ export default function GestioneUtentiPage() {
                   </button>
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-extrabold text-xl flex-shrink-0">
+                      <div className="w-14 h-14 rounded-full bg-[#0ea5e9]/20 border border-violet-500/40 flex items-center justify-center text-[#0ea5e9] font-extrabold text-xl flex-shrink-0">
                         {userDetail.username?.[0]?.toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -303,7 +303,7 @@ export default function GestioneUtentiPage() {
                             </span>
                           )}
                         </h2>
-                        <p className="text-sm text-zinc-500 truncate">{userDetail.email}</p>
+                        <p className="text-sm text-gray-500 truncate">{userDetail.email}</p>
                       </div>
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
@@ -331,30 +331,30 @@ export default function GestioneUtentiPage() {
 
                 {/* Scheda Anagrafica */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-zinc-850/40 border border-zinc-800 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase font-semibold">Città</p>
-                    <p className="text-sm font-semibold text-zinc-200 mt-1">{userDetail.citta || "Nessuna"}</p>
+                  <div className="bg-zinc-850/40 border border-[#2d2d3a] rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Città</p>
+                    <p className="text-sm font-semibold text-gray-200 mt-1">{userDetail.citta || "Nessuna"}</p>
                   </div>
-                  <div className="bg-zinc-850/40 border border-zinc-800 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase font-semibold">Livello Esperienza</p>
-                    <p className="text-sm font-semibold text-zinc-200 mt-1">{userDetail.livelloEsperienza || "Non specificato"}</p>
+                  <div className="bg-zinc-850/40 border border-[#2d2d3a] rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Livello Esperienza</p>
+                    <p className="text-sm font-semibold text-gray-200 mt-1">{userDetail.livelloEsperienza || "Non specificato"}</p>
                   </div>
-                  <div className="bg-zinc-850/40 border border-zinc-800 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase font-semibold">Ruolo</p>
-                    <p className="text-sm font-semibold text-zinc-200 mt-1 capitalize">{userDetail.ruolo}</p>
+                  <div className="bg-zinc-850/40 border border-[#2d2d3a] rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Ruolo</p>
+                    <p className="text-sm font-semibold text-gray-200 mt-1 capitalize">{userDetail.ruolo}</p>
                   </div>
-                  <div className="bg-zinc-850/40 border border-zinc-800 rounded-xl p-4">
-                    <p className="text-xs text-zinc-500 uppercase font-semibold">Data Registrazione</p>
-                    <p className="text-sm font-semibold text-zinc-200 mt-1">
+                  <div className="bg-zinc-850/40 border border-[#2d2d3a] rounded-xl p-4">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Data Registrazione</p>
+                    <p className="text-sm font-semibold text-gray-200 mt-1">
                       {new Date(userDetail.dataCreazione).toLocaleDateString("it-IT")}
                     </p>
                   </div>
                 </div>
 
                 {/* Bio */}
-                <div className="bg-zinc-850/40 border border-zinc-800 rounded-xl p-4">
-                  <p className="text-xs text-zinc-500 uppercase font-semibold mb-2">Biografia</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed italic">
+                <div className="bg-zinc-850/40 border border-[#2d2d3a] rounded-xl p-4">
+                  <p className="text-xs text-gray-500 uppercase font-semibold mb-2">Biografia</p>
+                  <p className="text-sm text-gray-300 leading-relaxed italic">
                     {userDetail.bio ? `"${userDetail.bio}"` : "Nessuna biografia inserita."}
                   </p>
                 </div>
@@ -362,13 +362,13 @@ export default function GestioneUtentiPage() {
                 {/* Strumenti e Generi */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-xs text-zinc-400 font-bold uppercase tracking-wider mb-2">Strumenti</h3>
+                    <h3 className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Strumenti</h3>
                     {userDetail.strumenti.length === 0 ? (
-                      <p className="text-xs text-zinc-500">Nessuno strumento suonato.</p>
+                      <p className="text-xs text-gray-500">Nessuno strumento suonato.</p>
                     ) : (
                       <div className="flex flex-wrap gap-2">
                         {userDetail.strumenti.map((s: any) => (
-                          <span key={s.idStrumento} className="px-2.5 py-1 bg-zinc-800 border border-zinc-700/60 text-zinc-300 text-xs rounded-lg font-medium">
+                          <span key={s.idStrumento} className="px-2.5 py-1 bg-[#2d2d3a] border border-[#2d2d3a] text-gray-300 text-xs rounded-lg font-medium">
                             {s.strumento.nome}
                           </span>
                         ))}
@@ -376,13 +376,13 @@ export default function GestioneUtentiPage() {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-xs text-zinc-400 font-bold uppercase tracking-wider mb-2">Generi</h3>
+                    <h3 className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Generi</h3>
                     {userDetail.generi.length === 0 ? (
-                      <p className="text-xs text-zinc-500">Nessun genere preferito.</p>
+                      <p className="text-xs text-gray-500">Nessun genere preferito.</p>
                     ) : (
                       <div className="flex flex-wrap gap-2">
                         {userDetail.generi.map((g: any) => (
-                          <span key={g.idGenere} className="px-2.5 py-1 bg-zinc-800 border border-zinc-700/60 text-zinc-300 text-xs rounded-lg font-medium">
+                          <span key={g.idGenere} className="px-2.5 py-1 bg-[#2d2d3a] border border-[#2d2d3a] text-gray-300 text-xs rounded-lg font-medium">
                             {g.genere.nome}
                           </span>
                         ))}
@@ -392,25 +392,46 @@ export default function GestioneUtentiPage() {
                 </div>
 
                 {/* Media Caricati */}
-                <div className="border-t border-zinc-800 pt-5">
+                <div className="border-t border-[#2d2d3a] pt-5">
                   <h3 className="text-sm font-bold text-white mb-3">Elementi Media ({userDetail.media.length})</h3>
                   {userDetail.media.length === 0 ? (
-                    <p className="text-xs text-zinc-500 py-2">Nessun file multimediale caricato.</p>
+                    <p className="text-xs text-gray-500 py-2">Nessun file multimediale caricato.</p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {userDetail.media.map((m: any) => (
-                        <div key={m.idMedia} className="bg-zinc-850 border border-zinc-800 rounded-xl p-3 flex flex-col justify-between gap-3">
-                          <div className="min-w-0 font-medium">
-                            <span className="px-1.5 py-0.5 bg-violet-950/40 border border-violet-900/60 text-violet-400 text-[10px] font-bold rounded">
-                              {m.tipo}
-                            </span>
-                            <p className="text-xs text-zinc-300 font-semibold truncate mt-2">{m.source}</p>
-                            {m.descrizione && (
-                              <p className="text-[11px] text-zinc-500 mt-1 line-clamp-1">{m.descrizione}</p>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between border-t border-zinc-800/60 pt-2 mt-auto">
-                            <span className="text-[9px] text-zinc-500">
+                        <div key={m.idMedia} className="bg-zinc-850 border border-[#2d2d3a] rounded-xl p-3 flex flex-col justify-between gap-3">
+                            <div className="min-w-0 font-medium">
+                              <span className="px-1.5 py-0.5 bg-[#0ea5e9]/10 border border-[#0ea5e9]/30 text-[#0ea5e9] text-[10px] font-bold rounded">
+                                {m.tipo}
+                              </span>
+                              
+                              {/* Rendering del media in base al tipo */}
+                              <div className="mt-3 bg-[#12121a] rounded-lg overflow-hidden border border-[#2d2d3a]/60 flex items-center justify-center min-h-[120px]">
+                                {m.tipo?.toUpperCase() === "IMMAGINE" && (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={m.source} alt={m.descrizione || "Media utente"} className="max-h-32 object-contain w-full" />
+                                )}
+                                {m.tipo?.toUpperCase() === "VIDEO" && (
+                                  <video src={m.source} controls className="max-h-32 w-full object-contain" />
+                                )}
+                                {m.tipo?.toUpperCase() === "AUDIO" && (
+                                  <div className="w-full px-2">
+                                    <audio src={m.source} controls className="w-full h-8" />
+                                  </div>
+                                )}
+                                {!["IMMAGINE", "VIDEO", "AUDIO"].includes(m.tipo?.toUpperCase()) && (
+                                  <a href={m.source} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0ea5e9] hover:underline break-all p-2">
+                                    {m.source}
+                                  </a>
+                                )}
+                              </div>
+
+                              {m.descrizione && (
+                                <p className="text-[11px] text-gray-500 mt-2 line-clamp-2">{m.descrizione}</p>
+                              )}
+                            </div>
+                          <div className="flex items-center justify-between border-t border-[#2d2d3a]/60 pt-2 mt-auto">
+                            <span className="text-[9px] text-gray-500">
                               {new Date(m.dataUpload).toLocaleDateString("it-IT")}
                             </span>
                             <button
@@ -427,10 +448,10 @@ export default function GestioneUtentiPage() {
                 </div>
 
                 {/* Sanzioni Applicate */}
-                <div className="border-t border-zinc-800 pt-5">
+                <div className="border-t border-[#2d2d3a] pt-5">
                   <h3 className="text-sm font-bold text-white mb-3">Provvedimenti ({userDetail.sanzioni.length})</h3>
                   {userDetail.sanzioni.length === 0 ? (
-                    <p className="text-xs text-zinc-500 py-2">Nessun provvedimento a carico dell'utente.</p>
+                    <p className="text-xs text-gray-500 py-2">Nessun provvedimento a carico dell'utente.</p>
                   ) : (
                     <div className="space-y-2">
                       {userDetail.sanzioni.map((s: any) => {
@@ -439,7 +460,7 @@ export default function GestioneUtentiPage() {
                         const isProvvAttivo = isBan || isSospAttiva;
 
                         return (
-                          <div key={s.idSanzione} className="bg-zinc-850/50 border border-zinc-800 rounded-xl p-3.5 flex justify-between items-start gap-4">
+                          <div key={s.idSanzione} className="bg-zinc-850/50 border border-[#2d2d3a] rounded-xl p-3.5 flex justify-between items-start gap-4">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
@@ -453,8 +474,8 @@ export default function GestioneUtentiPage() {
                                   <span className="text-[10px] text-emerald-400 font-semibold">• Attivo</span>
                                 )}
                               </div>
-                              <p className="text-xs text-zinc-300">Motivo: <span className="text-zinc-400">{s.motivo}</span></p>
-                              <p className="text-[10px] text-zinc-500">
+                              <p className="text-xs text-gray-300">Motivo: <span className="text-gray-400">{s.motivo}</span></p>
+                              <p className="text-[10px] text-gray-500">
                                 Inizio: {new Date(s.dataInizio).toLocaleDateString("it-IT")}
                                 {s.dataFine && ` • Fine: ${new Date(s.dataFine).toLocaleDateString("it-IT")}`}
                               </p>
@@ -476,14 +497,14 @@ export default function GestioneUtentiPage() {
         {/* Modal Sanzioni */}
         {showSanzioneModal && userDetail && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
-            <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div className="w-full max-w-md bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-[#2d2d3a] pb-3">
                 <h3 className="text-lg font-bold text-white">
                   Emetti {sanzioneTipo === "BAN" ? "Ban" : "Sospensione"} per {userDetail.username}
                 </h3>
                 <button
                   onClick={() => setShowSanzioneModal(false)}
-                  className="text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+                  className="text-gray-500 hover:text-gray-300 transition-colors cursor-pointer"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -494,35 +515,35 @@ export default function GestioneUtentiPage() {
               <form onSubmit={handleEmettiSanzione} className="space-y-4">
                 {sanzioneTipo === "SOSPENSIONE" && (
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Durata Sospensione (Giorni)</label>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Durata Sospensione (Giorni)</label>
                     <input
                       type="number"
                       min="1"
                       value={sanzioneGiorni}
                       onChange={(e) => setSanzioneGiorni(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                      className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                       required
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Motivo del provvedimento</label>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Motivo del provvedimento</label>
                   <textarea
                     rows={4}
                     placeholder="Inserisci la motivazione formale..."
                     value={sanzioneMotivo}
                     onChange={(e) => setSanzioneMotivo(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm resize-none"
+                    className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm resize-none"
                     required
                   />
                 </div>
 
-                <div className="flex gap-3 justify-end pt-3 border-t border-zinc-800">
+                <div className="flex gap-3 justify-end pt-3 border-t border-[#2d2d3a]">
                   <button
                     type="button"
                     onClick={() => setShowSanzioneModal(false)}
-                    className="px-4 py-2 bg-zinc-850 hover:bg-zinc-800 text-zinc-300 rounded-xl text-sm font-semibold transition-all cursor-pointer"
+                    className="px-4 py-2 bg-zinc-850 hover:bg-[#2d2d3a] text-gray-300 rounded-xl text-sm font-semibold transition-all cursor-pointer"
                   >
                     Annulla
                   </button>

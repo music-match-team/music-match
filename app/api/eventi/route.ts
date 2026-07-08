@@ -114,6 +114,7 @@ export async function POST(
         idCitta: dbCitta.idCitta,
         lat: body.lat,
         long: body.long,
+        locandina: body.locandina,
         data: new Date(body.data),
         creatori: {
           create: {

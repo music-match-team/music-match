@@ -13,6 +13,10 @@ export default function MusicistiPage() {
   const [showInfo, setShowInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Stati per il popup di Match
+  const [showMatchModal, setShowMatchModal] = useState(false);
+  const [matchMessage, setMatchMessage] = useState("");
+
   // Play state for videos
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -58,29 +62,34 @@ export default function MusicistiPage() {
     setIsPlaying(true);
   }, [currentIndex]);
 
-  async function creaMatch(idUtenteOttiene: number) {
-    const messaggio = prompt("Scrivi un messaggio per presentarti (opzionale):");
-    if (messaggio === null) return;
+  const apriMatchModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMatchMessage("");
+    setShowMatchModal(true);
+  };
 
+  async function confermaMatch() {
+    setShowMatchModal(false);
+    
     try {
       const response = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           idUtenteOrigina: utente.idUtente,
-          idUtenteOttiene,
-          messaggio,
+          idUtenteOttiene: musicistaCorrente.idUtente,
+          messaggio: matchMessage,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.match) {
-        router.push(`/chat/${data.match.idMatch}`);
+        router.push("/match");
       } else {
         alert(data.message || data.error);
         if (data.match) {
-          router.push(`/chat/${data.match.idMatch}`);
+          router.push("/match");
         }
       }
     } catch (error) {
@@ -208,15 +217,7 @@ export default function MusicistiPage() {
     <ProteggiPagina>
       {/* Container Full Screen simile a TikTok/Tinder */}
       <div
-        style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: '#000',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflow: 'hidden'
-        }}
+        className="fixed inset-0 bg-zinc-950 flex justify-center items-center overflow-hidden pt-6 pb-24 px-4 md:py-8 md:pb-8"
         onWheel={handleWheel}
       >
         <style>
@@ -244,18 +245,9 @@ export default function MusicistiPage() {
 
         {/* Scheda Musicista */}
         <div
+          className="relative w-full max-w-[450px] h-full max-h-[850px] flex flex-col overflow-hidden rounded-[32px] shadow-2xl border border-zinc-800/50"
           style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '450px',
-            height: '100%',
-            maxHeight: '850px',
             backgroundColor: isAudio ? '#1e1b4b' : '#222', // Colore diverso per audio
-            boxShadow: '0 0 20px rgba(0,0,0,0.5)',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            borderRadius: '24px' // Arrotondamento della scheda
           }}
         >
           {/* Render del Media */}
@@ -361,7 +353,7 @@ export default function MusicistiPage() {
               style={{
                 position: 'absolute',
                 bottom: 0, left: 0, right: 0,
-                height: '40%',
+                height: '50%',
                 background: isAudio
                   ? 'linear-gradient(to top, rgba(88, 28, 135, 1), transparent)' // Viola per audio
                   : 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', // Nero per video/foto
@@ -372,15 +364,8 @@ export default function MusicistiPage() {
 
           {/* Dettagli Utente (Sopra la sfumatura) */}
           <div
-            style={{
-              position: 'absolute',
-              bottom: '100px',
-              left: '20px',
-              right: '20px',
-              color: 'white',
-              textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
-              pointerEvents: 'none' // Per poter cliccare lo sfondo
-            }}
+            className="absolute left-5 right-5 text-white pointer-events-none z-10 bottom-[100px] md:bottom-[80px]"
+            style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}
           >
             <h1 style={{ margin: '0 0 5px 0', fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
               {musicistaCorrente.username}
@@ -413,18 +398,9 @@ export default function MusicistiPage() {
           </div>
 
           {/* Azioni Rapide (Solo Match) */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: 0, right: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              zIndex: 20
-            }}
-          >
+          <div className="absolute left-0 right-0 flex justify-center z-20 bottom-6 md:bottom-6">
             <button
-              onClick={() => creaMatch(musicistaCorrente.idUtente)}
+              onClick={apriMatchModal}
               style={{
                 padding: '15px 40px', borderRadius: '30px',
                 background: 'linear-gradient(135deg, #4469efff 0%, #184fe4ff 100%)',
@@ -441,56 +417,72 @@ export default function MusicistiPage() {
             </button>
           </div>
 
-          {/* I bottoni laterali sono stati spostati fuori dalla scheda (in basso nel codice) */}
-
           {/* Modale Info Espanso */}
           {showInfo && (
             <div
               style={{
                 position: 'absolute',
-                bottom: 0, left: 0, right: 0,
-                height: '60%',
-                backgroundColor: 'rgba(20,20,20,0.95)',
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.85)',
+                backdropFilter: 'blur(10px)',
+                zIndex: 30,
                 color: 'white',
-                borderTopLeftRadius: '20px',
-                borderTopRightRadius: '20px',
                 padding: '30px 20px',
                 overflowY: 'auto',
-                zIndex: 30,
-                boxShadow: '0 -5px 20px rgba(0,0,0,0.5)',
-                animation: 'slideUp 0.3s ease-out'
+                display: 'flex',
+                flexDirection: 'column',
+                animation: 'pulseIcon 0.3s ease-out'
               }}
             >
-              <style>{`
-                @keyframes slideUp {
-                  from { transform: translateY(100%); }
-                  to { transform: translateY(0); }
-                }
-              `}</style>
-
               <button
-                onClick={() => setShowInfo(false)}
-                style={{ position: 'absolute', top: '15px', right: '15px', background: 'transparent', border: 'none', color: '#aaa', fontSize: '20px', cursor: 'pointer' }}
+                onClick={(e) => { e.stopPropagation(); setShowInfo(false); }}
+                style={{
+                  alignSelf: 'flex-end', background: 'rgba(255,255,255,0.2)', border: 'none',
+                  color: 'white', padding: '10px 15px', borderRadius: '50%', cursor: 'pointer',
+                  fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '15px'
+                }}
               >
                 ✕
               </button>
-
-              <h2 style={{ marginTop: 0, borderBottom: '1px solid #444', paddingBottom: '10px' }}>{musicistaCorrente.username}</h2>
-
-              <div style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#888', display: 'block', fontSize: '0.9rem' }}>Esperienza</strong>
-                {musicistaCorrente.livelloEsperienza || "Non specificata"}
-              </div>
-
-              <div style={{ marginBottom: '15px' }}>
-                <strong style={{ color: '#888', display: 'block', fontSize: '0.9rem' }}>Città</strong>
-                {musicistaCorrente.citta || "Non specificata"}
-              </div>
-
-              <div style={{ marginBottom: '25px' }}>
-                <strong style={{ color: '#888', display: 'block', fontSize: '0.9rem' }}>Biografia</strong>
-                <p style={{ margin: '5px 0', lineHeight: '1.5' }}>{musicistaCorrente.bio || "Nessuna biografia inserita."}</p>
-              </div>
+              
+              <h2 style={{ fontSize: '2.2rem', marginBottom: '10px', color: '#0ea5e9' }}>{musicistaCorrente.username}</h2>
+              {musicistaCorrente.livelloEsperienza && (
+                <p style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '20px', color: '#ccc' }}>
+                  Livello: <span style={{ color: 'white' }}>{musicistaCorrente.livelloEsperienza}</span>
+                </p>
+              )}
+              {musicistaCorrente.bio && (
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 style={{ color: '#aaa', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Biografia</h3>
+                  <p style={{ fontSize: '1.1rem', lineHeight: 1.5, background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '12px' }}>
+                    {musicistaCorrente.bio}
+                  </p>
+                </div>
+              )}
+              {musicistaCorrente.strumenti?.length > 0 && (
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 style={{ color: '#aaa', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Strumenti</h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    {musicistaCorrente.strumenti.map((s: any) => (
+                      <span key={s.strumento.idStrumento} style={{ background: '#0ea5e9', color: 'white', padding: '8px 16px', borderRadius: '20px', fontWeight: 'bold' }}>
+                        {s.strumento.nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {musicistaCorrente.generi?.length > 0 && (
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 style={{ color: '#aaa', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Generi Preferiti</h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    {musicistaCorrente.generi.map((g: any) => (
+                      <span key={g.genere.idGenere} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid #555', padding: '8px 16px', borderRadius: '20px' }}>
+                        {g.genere.nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <button
                 onClick={() => segnalaUtente(musicistaCorrente.idUtente)}
@@ -501,7 +493,8 @@ export default function MusicistiPage() {
                   border: '1px solid #ef4444',
                   borderRadius: '8px',
                   fontWeight: 'bold',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  marginTop: 'auto'
                 }}
               >
                 🚩 Segnala Utente
@@ -522,6 +515,58 @@ export default function MusicistiPage() {
           </button>
 
         </div>
+
+        {/* --- Popup di Match --- */}
+        {showMatchModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col">
+              
+              {/* Intestazione Modal */}
+              <div className="p-5 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#0ea5e9] animate-pulse"></span>
+                  Nuovo Match
+                </h3>
+                <button
+                  onClick={() => setShowMatchModal(false)}
+                  className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+
+              {/* Corpo Modal */}
+              <div className="p-6">
+                <p className="text-sm text-zinc-300 mb-4">
+                  Stai per inviare una richiesta di match a <strong className="text-[#0ea5e9]">{musicistaCorrente.username}</strong>.
+                  Vuoi aggiungere un messaggio di presentazione?
+                </p>
+                <textarea
+                  value={matchMessage}
+                  onChange={(e) => setMatchMessage(e.target.value)}
+                  placeholder="Scrivi qui il tuo messaggio (opzionale)..."
+                  className="w-full h-32 bg-zinc-950 border border-zinc-700 text-white rounded-xl p-4 focus:outline-none focus:border-[#0ea5e9] focus:ring-1 focus:ring-[#0ea5e9] transition-all resize-none"
+                />
+              </div>
+
+              {/* Azioni Modal */}
+              <div className="p-5 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-900/50">
+                <button
+                  onClick={() => setShowMatchModal(false)}
+                  className="px-5 py-2.5 rounded-xl font-bold text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
+                >
+                  Annulla
+                </button>
+                <button
+                  onClick={confermaMatch}
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] text-white rounded-xl font-bold shadow-lg shadow-[#0ea5e9]/20 hover:shadow-[#0ea5e9]/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Invia Match
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Bottoni laterali per andare Su/Giù - Fuori dalla card */}
         <div 

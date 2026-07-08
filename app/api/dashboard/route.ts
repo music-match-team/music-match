@@ -58,6 +58,33 @@ export async function GET(
       }
     });
 
+  const recentMatches = await prisma.match.findMany({
+    where: {
+      OR: [
+        { idUtenteOrigina: idUtente },
+        { idUtenteOttiene: idUtente }
+      ]
+    },
+    include: {
+      utenteOrigina: { select: { idUtente: true, username: true, immagineProfilo: true } },
+      utenteOttiene: { select: { idUtente: true, username: true, immagineProfilo: true } }
+    },
+    orderBy: { dataMatch: 'desc' },
+    take: 3
+  });
+
+  const upcomingEvents = await prisma.partecipa.findMany({
+    where: {
+      idUtente,
+      evento: { data: { gte: new Date() } }
+    },
+    include: {
+      evento: { include: { citta: true } }
+    },
+    orderBy: { evento: { data: 'asc' } },
+    take: 3
+  });
+
   return Response.json({
     totaleMatch:
       match.length,
@@ -72,6 +99,18 @@ export async function GET(
       segnalazioni.length,
 
     totaleSanzioni:
-      sanzioni.length
+      sanzioni.length,
+
+    recentMatches:
+      recentMatches.map(m => {
+        const otherUser = m.idUtenteOrigina === idUtente ? m.utenteOttiene : m.utenteOrigina;
+        return {
+          idMatch: m.idMatch,
+          otherUser
+        };
+      }),
+
+    upcomingEvents:
+      upcomingEvents.map(p => p.evento)
   });
 }

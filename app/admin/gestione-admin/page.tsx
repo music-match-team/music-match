@@ -124,12 +124,12 @@ export default function GestioneAdminPage() {
   if (!admin) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen bg-[#12121a] text-white flex">
       <AdminSidebar />
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-8 min-w-0">
         <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Gestione Amministratori</h1>
-          <p className="text-zinc-400 text-sm mt-1">Crea nuovi membri del team amministrativo o revoca le loro credenziali.</p>
+          <p className="text-gray-400 text-sm mt-1">Crea nuovi membri del team amministrativo o revoca le loro credenziali.</p>
         </div>
 
         {messaggio && (
@@ -142,9 +142,9 @@ export default function GestioneAdminPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Form Creazione Admin */}
-          <div className="lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl h-fit">
+          <div className="lg:col-span-2 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 shadow-xl h-fit">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#0ea5e9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
               Nuovo Amministratore
@@ -152,38 +152,38 @@ export default function GestioneAdminPage() {
 
             <form onSubmit={creaAmministratore} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Username</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Username</label>
                 <input
                   required
                   type="text"
                   placeholder="Inserisci username..."
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                  className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Email</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email</label>
                 <input
                   required
                   type="email"
                   placeholder="nome.cognome@musicmatch.it"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                  className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Password temporanea</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Password temporanea</label>
                 <input
                   required
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-800/40 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all text-sm"
+                  className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
                 />
               </div>
 
@@ -193,9 +193,9 @@ export default function GestioneAdminPage() {
                   id="isSuperAdmin"
                   checked={isSuperAdmin}
                   onChange={(e) => setIsSuperAdmin(e.target.checked)}
-                  className="w-4 h-4 rounded border-zinc-700 bg-zinc-800 text-violet-600 focus:ring-violet-500 focus:ring-offset-zinc-900 focus:ring-2 transition-all cursor-pointer"
+                  className="w-4 h-4 rounded border-[#3f3f50] bg-[#2d2d3a] text-violet-600 focus:ring-[#0ea5e9] focus:ring-offset-zinc-900 focus:ring-2 transition-all cursor-pointer"
                 />
-                <label htmlFor="isSuperAdmin" className="text-sm font-semibold text-zinc-300 cursor-pointer select-none">
+                <label htmlFor="isSuperAdmin" className="text-sm font-semibold text-gray-300 cursor-pointer select-none">
                   Abilita come Super Admin
                 </label>
               </div>
@@ -203,7 +203,7 @@ export default function GestioneAdminPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-2.5 px-4 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed text-sm mt-3"
+                className="w-full py-2.5 px-4 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 hover:shadow-[#0ea5e9]/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed text-sm mt-3"
               >
                 {submitting ? "Creazione in corso..." : "Crea Amministratore"}
               </button>
@@ -211,9 +211,9 @@ export default function GestioneAdminPage() {
           </div>
 
           {/* Elenco Admin */}
-          <div className="lg:col-span-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl flex flex-col">
+          <div className="lg:col-span-3 bg-[#1e1e24] border border-[#2d2d3a] rounded-2xl p-6 shadow-xl flex flex-col">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#0ea5e9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Amministratori Registrati
@@ -222,11 +222,11 @@ export default function GestioneAdminPage() {
             {loading ? (
               <div className="space-y-3 flex-1">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-14 bg-zinc-800/30 rounded-xl animate-pulse" />
+                  <div key={i} className="h-14 bg-[#2d2d3a]/30 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : amministratori.length === 0 ? (
-              <p className="text-zinc-500 text-sm py-10 text-center flex-1">Nessun amministratore trovato.</p>
+              <p className="text-gray-500 text-sm py-10 text-center flex-1">Nessun amministratore trovato.</p>
             ) : (
               <div className="space-y-3 overflow-y-auto max-h-[500px] pr-1">
                 {amministratori.map((a) => {
@@ -234,17 +234,17 @@ export default function GestioneAdminPage() {
                   return (
                     <div
                       key={a.idAdmin}
-                      className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex items-center justify-between transition-colors hover:border-zinc-700/60"
+                      className="bg-[#1e1e24] border border-[#2d2d3a] rounded-xl p-4 flex items-center justify-between transition-colors hover:border-[#2d2d3a]"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-white text-sm truncate">{a.username}</span>
                           {a.isSuperAdmin ? (
-                            <span className="px-2 py-0.5 bg-violet-950/40 border border-violet-900/60 text-violet-400 text-[10px] font-bold rounded-full">
+                            <span className="px-2 py-0.5 bg-violet-950/40 border border-violet-900/60 text-[#0ea5e9] text-[10px] font-bold rounded-full">
                               Super Admin
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 bg-zinc-800 border border-zinc-700/60 text-zinc-400 text-[10px] font-medium rounded-full">
+                            <span className="px-2 py-0.5 bg-[#2d2d3a] border border-[#2d2d3a] text-gray-400 text-[10px] font-medium rounded-full">
                               Amministratore
                             </span>
                           )}
@@ -252,7 +252,7 @@ export default function GestioneAdminPage() {
                             <span className="text-[10px] text-emerald-400 font-semibold">• Tu</span>
                           )}
                         </div>
-                        <p className="text-xs text-zinc-500 mt-1 truncate">{a.email}</p>
+                        <p className="text-xs text-gray-500 mt-1 truncate">{a.email}</p>
                       </div>
 
                       {!isCurrentAdmin && (

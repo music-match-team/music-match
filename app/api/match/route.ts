@@ -181,7 +181,8 @@ export async function GET(
             idUtente: true,
             username: true,
             bio: true,
-            livelloEsperienza: true
+            livelloEsperienza: true,
+            immagineProfilo: true
 
           }
 
@@ -194,7 +195,8 @@ export async function GET(
             idUtente: true,
             username: true,
             bio: true,
-            livelloEsperienza: true
+            livelloEsperienza: true,
+            immagineProfilo: true
 
           }
 

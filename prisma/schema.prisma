@@ -23,6 +23,7 @@ model Utente {
   lat               Float?
   long              Float?
   citta             String?
+  immagineProfilo   String?
   dataCreazione     DateTime @default(now())
 
   strumenti Suona[]
@@ -93,6 +94,9 @@ model Evento {
   long Float?
 
   data DateTime
+
+  locandina String?
+
 
   creatori Crea[]
 

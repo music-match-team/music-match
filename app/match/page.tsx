@@ -140,7 +140,7 @@ export default function MatchMasterDetailPage() {
           
           {/* Header Lista */}
           <div className="p-4 md:p-6 border-b border-zinc-800 bg-zinc-950 md:bg-transparent shrink-0">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#3b38f6] to-[#c314f5] bg-clip-text text-transparent mb-1">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] bg-clip-text text-transparent mb-1">
               Match
             </h1>
             <p className="text-zinc-400 text-xs md:text-sm">
@@ -152,7 +152,7 @@ export default function MatchMasterDetailPage() {
           <div className="flex-1 overflow-y-auto custom-scrollbar p-2 md:p-4">
             {loadingMatches ? (
               <div className="py-10 flex justify-center items-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#c314f5]"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#0ea5e9]"></div>
               </div>
             ) : matches.length === 0 ? (
               <div className="py-10 flex flex-col items-center text-center px-4">
@@ -179,21 +179,25 @@ export default function MatchMasterDetailPage() {
                       onClick={() => setSelectedMatch(match)}
                       className={`w-full text-left flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
-                          ? "bg-zinc-800/80 border-[#c314f5]/50 shadow-md"
+                          ? "bg-zinc-800/80 border-[#0ea5e9]/50 shadow-md"
                           : "bg-transparent border-transparent hover:bg-zinc-900 hover:border-zinc-800"
                       }`}
                     >
                       {/* Avatar Piccolo */}
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#3b38f6] to-[#c314f5] flex items-center justify-center flex-shrink-0 shadow-inner">
-                        <span className="text-white font-bold text-lg uppercase">
-                          {altroUtente.username.charAt(0)}
-                        </span>
+                      <div className="w-12 h-12 rounded-full border border-zinc-700 overflow-hidden bg-gradient-to-tr from-[#22d3ee] to-[#0ea5e9] flex items-center justify-center flex-shrink-0 shadow-inner">
+                        {altroUtente.immagineProfilo ? (
+                          <img src={altroUtente.immagineProfilo} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-white font-bold text-lg uppercase">
+                            {altroUtente.username.charAt(0)}
+                          </span>
+                        )}
                       </div>
                       
                       {/* Info compatte */}
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-center mb-0.5">
-                          <h2 className={`text-sm font-bold truncate ${isSelected ? 'text-[#c314f5]' : 'text-zinc-100'}`}>
+                          <h2 className={`text-sm font-bold truncate ${isSelected ? 'text-[#0ea5e9]' : 'text-zinc-100'}`}>
                             {altroUtente.username}
                           </h2>
                           {altroUtente.livelloEsperienza && (
@@ -248,17 +252,21 @@ export default function MatchMasterDetailPage() {
                   
                   {/* Info Utente Selezionato */}
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#3b38f6] to-[#c314f5] flex items-center justify-center flex-shrink-0 shadow-inner">
-                      <span className="text-white font-bold text-sm uppercase">
-                        {(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).username.charAt(0)}
-                      </span>
+                    <div className="w-10 h-10 rounded-full border border-zinc-700 overflow-hidden bg-gradient-to-tr from-[#22d3ee] to-[#0ea5e9] flex items-center justify-center flex-shrink-0 shadow-inner">
+                      { (selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).immagineProfilo ? (
+                          <img src={(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).immagineProfilo} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-white font-bold text-sm uppercase">
+                            {(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).username.charAt(0)}
+                          </span>
+                      )}
                     </div>
                     <div>
                       <h2 className="text-sm md:text-base font-bold text-white">
                         {(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).username}
                       </h2>
-                      <span className="text-[10px] text-[#c314f5] font-medium flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#c314f5] animate-pulse"></span>
+                      <span className="text-[10px] text-[#0ea5e9] font-medium flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] animate-pulse"></span>
                         Match Attivo
                       </span>
                     </div>
@@ -293,7 +301,7 @@ export default function MatchMasterDetailPage() {
                       <div key={msg.idMessaggio} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[80%] md:max-w-[65%] rounded-2xl px-4 py-2.5 text-sm ${
                           isMe 
-                            ? 'bg-gradient-to-br from-[#3b38f6] to-[#c314f5] text-white rounded-br-sm shadow-md' 
+                            ? 'bg-gradient-to-br from-[#22d3ee] to-[#0ea5e9] text-white rounded-br-sm shadow-md' 
                             : 'bg-zinc-800 border border-zinc-700 text-zinc-100 rounded-bl-sm shadow-sm'
                         }`}>
                           <p className="break-words leading-relaxed">{msg.contenuto}</p>
@@ -315,14 +323,14 @@ export default function MatchMasterDetailPage() {
                     onChange={(e) => setNuovoMessaggio(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Scrivi un messaggio..."
-                    className="w-full bg-zinc-950 border border-zinc-700 text-white rounded-full pl-5 pr-12 py-3 md:py-3.5 focus:outline-none focus:ring-2 focus:ring-[#c314f5] focus:border-transparent transition-all text-sm shadow-inner"
+                    className="w-full bg-zinc-950 border border-zinc-700 text-white rounded-full pl-5 pr-12 py-3 md:py-3.5 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm shadow-inner"
                   />
                   <button
                     onClick={inviaMessaggio}
                     disabled={!nuovoMessaggio.trim()}
                     className={`absolute right-2 p-2 rounded-full transition-all flex items-center justify-center cursor-pointer ${
                       nuovoMessaggio.trim() 
-                        ? 'bg-[#c314f5] text-white hover:scale-105 active:scale-95 shadow-lg shadow-[#c314f5]/30' 
+                        ? 'bg-[#0ea5e9] text-white hover:scale-105 active:scale-95 shadow-lg shadow-[#0ea5e9]/30' 
                         : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
                   >
