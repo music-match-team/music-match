@@ -72,10 +72,9 @@ export default function RegisterPage() {
 
         {/* Logo ed Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] text-white shadow-xl shadow-[#0ea5e9]/20 mb-4 hover:rotate-6 transition-transform">
-            <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
+          <div className="flex justify-center mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Music match logo" className="h-16 w-auto object-contain hover:scale-105 transition-transform cursor-pointer" />
           </div>
           <h2 className="text-3xl font-extrabold text-white tracking-tight">
             Crea il tuo account

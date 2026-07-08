@@ -73,10 +73,9 @@ export default function LoginPage() {
         
         {/* Logo ed Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] text-white shadow-xl shadow-[#0ea5e9]/20 mb-4 hover:rotate-6 transition-transform">
-            <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-            </svg>
+          <div className="flex justify-center mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Music match logo" className="h-16 w-auto object-contain hover:scale-105 transition-transform cursor-pointer" />
           </div>
           <h2 className="text-3xl font-extrabold text-white tracking-tight">
             Accedi a MusicMatch

@@ -54,10 +54,9 @@ export default function AdminLoginPage() {
 
       <div className="w-full max-w-md z-10 space-y-8">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ea5e9] to-[#0284c7] text-white shadow-xl shadow-[#0ea5e9]/20 mb-4">
-            <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+          <div className="flex justify-center mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Music match logo" className="h-16 w-auto object-contain hover:scale-105 transition-transform cursor-pointer" />
           </div>
           <h2 className="text-3xl font-extrabold text-white tracking-tight">Accesso Amministratore</h2>
           <p className="mt-2 text-sm text-gray-400">Area riservata al personale autorizzato</p>
