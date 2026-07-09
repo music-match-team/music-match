@@ -37,7 +37,22 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  const now = new Date();
+
   const musicisti = await prisma.utente.findMany({
+    where: {
+      sanzioni: {
+        none: {
+          OR: [
+            { tipo: "BAN" },
+            { 
+              tipo: "SOSPENSIONE",
+              dataFine: { gt: now }
+            }
+          ]
+        }
+      }
+    },
     select: {
       idUtente: true,
       username: true,

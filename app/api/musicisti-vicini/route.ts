@@ -34,18 +34,23 @@ export async function GET(
     return Response.json([]);
   }
 
+  const now = new Date();
+
   const utenti =
     await prisma.utente.findMany({
-
       where: {
-
         idUtente: {
-          not:
-            idUtente
+          not: idUtente
+        },
+        sanzioni: {
+          none: {
+            OR: [
+              { tipo: "BAN" },
+              { tipo: "SOSPENSIONE", dataFine: { gt: now } }
+            ]
+          }
         }
-
       }
-
     });
 
   const vicini =
