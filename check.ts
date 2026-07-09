@@ -1,1 +1,0 @@
-import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient(); prisma.utente.findMany({select:{username:true,citta:true,lat:true,long:true}}).then(u => {console.table(u); process.exit(0)});
