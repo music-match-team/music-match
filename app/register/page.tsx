@@ -45,6 +45,7 @@ export default function RegisterPage() {
 
       if (response.ok) {
         localStorage.setItem("utente", JSON.stringify(data));
+        window.dispatchEvent(new Event("utenteAggiornato"));
         setIsError(false);
         setMessaggio("Registrazione completata! Reindirizzamento...");
         setTimeout(() => router.push("/profilo"), 1000);

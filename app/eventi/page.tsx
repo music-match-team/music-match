@@ -78,6 +78,28 @@ export default function EventiPage() {
     }
   }
 
+  async function eliminaEvento(idEvento: number) {
+    if (!confirm("Sei sicuro di voler eliminare questo evento?")) return;
+    
+    try {
+      const response = await fetch(`/api/eventi/${idEvento}?idUtente=${utente.idUtente}`, {
+        method: "DELETE",
+      });
+      
+      if (response.ok) {
+        setEventi(prev => prev.filter(ev => ev.idEvento !== idEvento));
+        setSelectedEvento(null);
+        alert("Evento eliminato con successo.");
+      } else {
+        const data = await response.json();
+        alert(data.error || "Errore durante l'eliminazione.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Errore di rete durante l'eliminazione.");
+    }
+  }
+
   const toggleSection = (section: string) => {
     setOpenSections(prev => 
       prev.includes(section) 
@@ -298,13 +320,31 @@ export default function EventiPage() {
                         <span className="text-2xl font-bold text-white">{selectedEvento._count?.partecipanti || 0}</span>
                         <span className="font-medium">iscritti</span>
                       </div>
-                      <button 
-                        onClick={() => partecipa(selectedEvento.idEvento)}
-                        className="w-full px-8 py-3.5 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
-                      >
-                        Partecipa Ora
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                      </button>
+                      
+                      {selectedEvento.creatori?.some((c: any) => c.idUtente === utente?.idUtente) ? (
+                        <div className="w-full flex flex-col gap-3">
+                          <button 
+                            onClick={() => router.push(`/eventi/crea?id=${selectedEvento.idEvento}`)}
+                            className="w-full px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl border border-zinc-700 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
+                          >
+                            ✏️ Modifica
+                          </button>
+                          <button 
+                            onClick={() => eliminaEvento(selectedEvento.idEvento)}
+                            className="w-full px-8 py-3.5 bg-red-900/50 hover:bg-red-900/80 text-red-200 font-bold rounded-xl border border-red-800 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
+                          >
+                            🗑️ Elimina
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => partecipa(selectedEvento.idEvento)}
+                          className="w-full px-8 py-3.5 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
+                        >
+                          Partecipa Ora
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                        </button>
+                      )}
                     </div>
                   </div>
 

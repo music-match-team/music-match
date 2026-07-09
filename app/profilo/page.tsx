@@ -334,14 +334,21 @@ export default function ProfiloPage() {
             </div>
           </div>
 
-          {/* Status banner */}
+          {/* Status Toast */}
           {messaggio && (
-            <div className={`mb-6 p-4 rounded-lg border text-sm font-medium transition-all ${
-              messaggio.toLowerCase().includes("errore")
-                ? "bg-red-950/40 border-red-800/80 text-red-300"
-                : "bg-emerald-950/40 border-emerald-800/80 text-emerald-300"
-            }`}>
-              {messaggio}
+            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 animate-[bounce_1s_infinite]">
+              <div className={`px-6 py-4 rounded-xl border shadow-2xl text-lg font-bold flex items-center gap-3 transition-all backdrop-blur-md ${
+                messaggio.toLowerCase().includes("errore")
+                  ? "bg-red-950/90 border-red-800 text-red-300 shadow-red-900/50"
+                  : "bg-emerald-950/90 border-emerald-500 text-emerald-300 shadow-emerald-900/50"
+              }`}>
+                {messaggio.toLowerCase().includes("errore") ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                )}
+                {messaggio}
+              </div>
             </div>
           )}
 
@@ -549,15 +556,6 @@ export default function ProfiloPage() {
                 </div>
               </div>
 
-              {/* Salva Profilo button card */}
-              <div className="flex justify-end">
-                <button
-                  onClick={salvaProfilo}
-                  className="w-full sm:w-auto px-8 py-3 bg-[#22d3ee] hover:bg-[#22d3ee] text-white rounded-lg font-bold shadow-lg shadow-[#22d3ee]/20 hover:shadow-[#22d3ee]/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  Salva Profilo
-                </button>
-              </div>
             </div>
             {/* Right column: Media Upload & Gallery */}
             <div className="space-y-6">
@@ -820,6 +818,16 @@ export default function ProfiloPage() {
               </div>
             </div>
 
+          </div>
+
+          {/* Salva Profilo button - Outside grid per essere sempre visibile in fondo su mobile */}
+          <div className="mt-12 flex justify-center lg:justify-end pb-8 border-t border-zinc-800 pt-8">
+            <button
+              onClick={salvaProfilo}
+              className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white rounded-xl font-bold shadow-lg shadow-[#0ea5e9]/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer text-lg"
+            >
+              Salva Profilo
+            </button>
           </div>
 
         </div>

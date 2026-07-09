@@ -1,17 +1,44 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import ProteggiPagina from "../../components/ProteggiPagina";
 
-export default function CreaEventoPage() {
+function CreaEventoForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("id");
+
   const [utente, setUtente] = useState<any>(null);
 
   useEffect(() => {
     const u = JSON.parse(localStorage.getItem("utente") || "null");
     setUtente(u);
   }, []);
+
+  useEffect(() => {
+    if (editId) {
+      fetch(`/api/eventi/${editId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            setTitolo(data.titolo || "");
+            setDescrizione(data.descrizione || "");
+            if (data.data) {
+              const d = new Date(data.data);
+              // format for datetime-local: YYYY-MM-DDThh:mm
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              const formatted = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+              setData(formatted);
+            }
+            if (data.citta) setCittaSelezionata(data.citta.nome);
+            setLat(data.lat);
+            setLong(data.long);
+            setLocandinaBase64(data.locandina || null);
+          }
+        });
+    }
+  }, [editId]);
 
   const [titolo, setTitolo] = useState("");
   const [descrizione, setDescrizione] = useState("");
@@ -61,8 +88,11 @@ export default function CreaEventoPage() {
     }
 
     try {
-      const response = await fetch("/api/eventi", {
-        method: "POST",
+      const url = editId ? `/api/eventi/${editId}` : "/api/eventi";
+      const method = editId ? "PUT" : "POST";
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -79,11 +109,11 @@ export default function CreaEventoPage() {
       });
 
       if (!response.ok) {
-        setMessaggio("Errore durante la creazione dell'evento");
+        setMessaggio(`Errore durante ${editId ? "la modifica" : "la creazione"} dell'evento`);
         return;
       }
 
-      setMessaggio("Evento creato con successo! Reindirizzamento...");
+      setMessaggio(`Evento ${editId ? "modificato" : "creato"} con successo! Reindirizzamento...`);
       setTimeout(() => {
         router.push("/eventi");
       }, 1500);
@@ -107,7 +137,7 @@ export default function CreaEventoPage() {
           </button>
 
           <h1 className="text-3xl font-extrabold text-center mb-8 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] bg-clip-text text-transparent">
-            Organizza un Evento
+            {editId ? "Modifica Evento" : "Organizza un Evento"}
           </h1>
 
           <div className="flex flex-col gap-5">
@@ -220,12 +250,20 @@ export default function CreaEventoPage() {
               onClick={creaEvento} 
               className="mt-4 w-full py-4 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
             >
-              Pubblica Evento
+              {editId ? "Salva Modifiche" : "Pubblica Evento"}
             </button>
 
           </div>
         </div>
       </main>
     </ProteggiPagina>
+  );
+}
+
+export default function CreaEventoPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#22d3ee]"></div></div>}>
+      <CreaEventoForm />
+    </Suspense>
   );
 }

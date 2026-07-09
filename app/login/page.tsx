@@ -54,6 +54,7 @@ export default function LoginPage() {
 
       const utenteLoggato = await response.json();
       localStorage.setItem("utente", JSON.stringify(utenteLoggato));
+      window.dispatchEvent(new Event("utenteAggiornato"));
       router.push("/musicisti");
     } catch (e) {
       console.error(e);

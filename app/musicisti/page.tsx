@@ -447,8 +447,13 @@ export default function MusicistiPage() {
               
               <h2 style={{ fontSize: '2.2rem', marginBottom: '10px', color: '#0ea5e9' }}>{musicistaCorrente.username}</h2>
               {musicistaCorrente.livelloEsperienza && (
-                <p style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '20px', color: '#ccc' }}>
+                <p style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '10px', color: '#ccc' }}>
                   Livello: <span style={{ color: 'white' }}>{musicistaCorrente.livelloEsperienza}</span>
+                </p>
+              )}
+              {musicistaCorrente.citta && (
+                <p style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '20px', color: '#ccc' }}>
+                  Città: <span style={{ color: 'white' }}>{musicistaCorrente.citta}</span>
                 </p>
               )}
               {musicistaCorrente.bio && (

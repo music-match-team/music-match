@@ -145,31 +145,31 @@ export default function Navbar() {
       </div>
 
       {/* Nav Links */}
-      <div className="flex flex-row md:flex-col gap-2 md:gap-4 w-full justify-around md:justify-start flex-1">
+      <div className="contents md:flex md:flex-col md:gap-4 md:w-full md:justify-start md:flex-1">
 
         {/* MUSICISTI */}
-        <Link href="/musicisti" className={`order-3 md:order-1 absolute left-1/2 -translate-x-1/2 -top-6 md:static md:translate-x-0 md:transform-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-4 md:p-2 rounded-full md:rounded-lg transition-all shadow-xl z-20 border-[5px] border-[#16161a] md:border md:shadow-none md:mb-2 ${pathname === "/musicisti" ? "bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white shadow-[#0ea5e9]/60 md:bg-none md:bg-white/10 md:border-[#0ea5e9]/50 md:text-[#0ea5e9]" : "bg-gradient-to-r from-[#0ea5e9]/90 to-[#0284c7]/90 text-white hover:from-[#0ea5e9] hover:to-[#0284c7] hover:text-white shadow-[#0ea5e9]/30 hover:-translate-y-1 md:hover:-translate-y-0 md:bg-none md:bg-transparent md:border-zinc-700/50 md:text-gray-300 md:hover:bg-white/5 md:hover:border-zinc-500"}`}>
+        <Link href="/musicisti" className={`md:order-1 absolute left-1/2 -translate-x-1/2 -top-6 md:static md:translate-x-0 md:transform-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-4 md:p-2 rounded-full md:rounded-lg transition-all shadow-xl z-20 border-[5px] border-[#16161a] md:border md:shadow-none md:mb-2 ${pathname === "/musicisti" ? "bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white shadow-[#0ea5e9]/60 md:bg-none md:bg-white/10 md:border-[#0ea5e9]/50 md:text-[#0ea5e9]" : "bg-gradient-to-r from-[#0ea5e9]/90 to-[#0284c7]/90 text-white hover:from-[#0ea5e9] hover:to-[#0284c7] hover:text-white shadow-[#0ea5e9]/30 hover:-translate-y-1 md:hover:-translate-y-0 md:bg-none md:bg-transparent md:border-zinc-700/50 md:text-gray-300 md:hover:bg-white/5 md:hover:border-zinc-500"}`}>
           <svg className="w-8 h-8 md:w-5 md:h-5 md:text-[#0ea5e9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           <span className="text-[10px] md:text-base font-bold hidden md:block">Musicisti</span>
         </Link>
 
         {/* DASHBOARD */}
-        <Link href="/dashboard" className={`order-1 md:order-2 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/dashboard" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+        <Link href="/dashboard" className={`order-1 md:order-2 flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/dashboard" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
           <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
           <span className="text-[10px] md:text-base font-medium block">Dashboard</span>
         </Link>
 
         {/* EVENTI */}
-        <Link href="/eventi" className={`order-2 md:order-3 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/eventi" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+        <Link href="/eventi" className={`order-2 md:order-3 flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/eventi" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
           <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
           <span className="text-[10px] md:text-base font-medium block">Eventi</span>
         </Link>
 
         {/* Placeholder div on mobile to reserve space for the absolute centered button */}
-        <div className="w-12 h-10 md:hidden pointer-events-none order-4"></div>
+        <div className="flex-1 md:hidden pointer-events-none order-3"></div>
 
         {/* MATCH */}
-        <Link href="/match" className={`order-5 md:order-5 flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/match" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
+        <Link href="/match" className={`order-4 md:order-5 flex-1 md:flex-none flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 p-2 rounded-lg transition-colors ${pathname === "/match" ? "text-[#0ea5e9] md:bg-white/5" : "text-gray-400 hover:text-white hover:bg-white/5"}`}>
           <svg className="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
           <span className="text-[10px] md:text-base font-medium block">Match</span>
         </Link>
@@ -210,9 +210,9 @@ export default function Navbar() {
       </div>
 
       {/* Notifiche & Profilo */}
-      <div className="flex flex-row md:flex-col md:w-full items-center md:items-stretch gap-2 md:gap-4 md:mt-auto">
+      <div className="contents md:flex md:flex-col md:w-full md:items-stretch md:gap-4 md:mt-auto">
 
-        <div id="notifiche-dropdown-container" className="relative flex items-center justify-center md:justify-start w-full">
+        <div id="notifiche-dropdown-container" className="order-5 md:order-none flex-1 md:flex-none relative flex items-center justify-center md:justify-start w-full">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors w-full justify-center md:justify-start ${showDropdown ? "text-white md:bg-white/10" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
