@@ -406,7 +406,7 @@ export default function ProfiloPage() {
                   {/* Città */}
                   <div>
                     <label className="block text-sm font-semibold text-zinc-300 mb-1.5">
-                      Città (GeoNames)
+                      Città
                     </label>
                     <div className="relative">
                       <input

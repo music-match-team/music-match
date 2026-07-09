@@ -135,7 +135,7 @@ export default function Navbar() {
   const unreadCount = notifiche.filter(n => !n.letta).length;
 
   return (
-    <nav className="fixed bottom-4 left-4 right-4 md:bottom-0 md:left-0 md:right-0 md:static md:w-64 md:h-screen bg-zinc-900/90 backdrop-blur-xl md:bg-[#1e1e24] flex flex-row md:flex-col items-center md:items-start justify-around md:justify-start px-4 py-3 md:p-6 z-50 rounded-2xl md:rounded-none border border-zinc-800 md:border-y-0 md:border-l-0 md:border-r shadow-2xl md:shadow-none transition-all duration-300">
+    <nav className="fixed bottom-4 left-4 right-4 md:bottom-0 md:left-0 md:right-0 md:static md:w-64 md:h-screen bg-zinc-900/90 backdrop-blur-xl md:bg-[#1e1e24] flex flex-row md:flex-col items-center md:items-start justify-around md:justify-start px-4 py-3 md:p-6 z-50 rounded-2xl md:rounded-none border border-zinc-800 md:border-y-0 md:border-l-0 md:border-r shadow-2xl md:shadow-none transition-all duration-300 md:overflow-y-auto scrollbar-hide">
 
       {/* Logo Desktop Solo */}
       <div className="hidden md:flex mb-10 w-full items-center justify-start">
