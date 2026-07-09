@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminSidebar from "../components/AdminSidebar";
+import { validatePassword } from "@/lib/password-validation";
 
 export default function GestioneAdminPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function GestioneAdminPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   // Notification states
   const [messaggio, setMessaggio] = useState("");
@@ -66,7 +68,15 @@ export default function GestioneAdminPage() {
       return;
     }
 
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      showMsg("La password non soddisfa i requisiti di sicurezza.", true);
+      setPasswordErrors(passwordValidation.errors);
+      return;
+    }
+
     setSubmitting(true);
+    setPasswordErrors([]);
     try {
       const response = await fetch("/api/admin/gestione-admin", {
         method: "POST",
@@ -182,9 +192,28 @@ export default function GestioneAdminPage() {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all text-sm"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (passwordErrors.length > 0) setPasswordErrors([]);
+                  }}
+                  className={`w-full px-4 py-2.5 bg-[#12121a] border rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm ${
+                    passwordErrors.length > 0 
+                      ? "border-red-800 focus:ring-red-600" 
+                      : "border-[#2d2d3a] focus:ring-[#0ea5e9]"
+                  }`}
                 />
+                {passwordErrors.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {passwordErrors.map((error, index) => (
+                      <p key={index} className="text-xs text-red-400 flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        {error}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-3 pt-2">

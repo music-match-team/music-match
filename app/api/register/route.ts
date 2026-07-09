@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { validatePassword } from "@/lib/password-validation";
 
 export async function POST(
   request: Request
@@ -11,6 +12,18 @@ export async function POST(
     return Response.json(
       {
         error: "Tutti i campi sono obbligatori"
+      },
+      {
+        status: 400
+      }
+    );
+  }
+
+  const passwordValidation = validatePassword(body.password);
+  if (!passwordValidation.isValid) {
+    return Response.json(
+      {
+        error: passwordValidation.errors.join(". ")
       },
       {
         status: 400

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { validatePassword } from "@/lib/password-validation";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function RegisterPage() {
   const [messaggio, setMessaggio] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const u = JSON.parse(localStorage.getItem("utente") || "null");
@@ -28,9 +30,18 @@ export default function RegisterPage() {
       return;
     }
 
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setIsError(true);
+      setMessaggio("La password non soddisfa i requisiti di sicurezza.");
+      setPasswordErrors(passwordValidation.errors);
+      return;
+    }
+
     setIsSubmitting(true);
     setMessaggio("");
     setIsError(false);
+    setPasswordErrors([]);
 
     try {
       const response = await fetch("/api/register", {
@@ -169,8 +180,15 @@ export default function RegisterPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-12 py-3 bg-[#12121a] border border-[#2d2d3a] rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (passwordErrors.length > 0) setPasswordErrors([]);
+                  }}
+                  className={`w-full pl-11 pr-12 py-3 bg-[#12121a] border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                    passwordErrors.length > 0 
+                      ? "border-red-800 focus:ring-red-600" 
+                      : "border-[#2d2d3a] focus:ring-[#0ea5e9]"
+                  }`}
                   required
                 />
                 <button
@@ -190,6 +208,18 @@ export default function RegisterPage() {
                   )}
                 </button>
               </div>
+              {passwordErrors.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {passwordErrors.map((error, index) => (
+                    <p key={index} className="text-xs text-red-400 flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      {error}
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Termini di servizio */}

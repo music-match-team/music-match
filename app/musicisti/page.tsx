@@ -417,6 +417,18 @@ export default function MusicistiPage() {
             </button>
           </div>
 
+          {/* Pulsante Torna alla Home / Esci */}
+          <button
+            onClick={() => router.push('/dashboard')}
+            style={{
+              position: 'absolute', top: '20px', left: '20px',
+              background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none',
+              padding: '8px 12px', borderRadius: '20px', cursor: 'pointer', zIndex: 20
+            }}
+          >
+            ↩ Home
+          </button>
+
           {/* Modale Info Espanso */}
           {showInfo && (
             <div
@@ -506,18 +518,6 @@ export default function MusicistiPage() {
               </button>
             </div>
           )}
-
-          {/* Pulsante Torna alla Home / Esci */}
-          <button
-            onClick={() => router.push('/dashboard')}
-            style={{
-              position: 'absolute', top: '20px', left: '20px',
-              background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none',
-              padding: '8px 12px', borderRadius: '20px', cursor: 'pointer', zIndex: 20
-            }}
-          >
-            ↩ Home
-          </button>
 
         </div>
 

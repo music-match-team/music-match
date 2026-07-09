@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
+import { validatePassword } from "../lib/password-validation";
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,13 @@ async function main() {
 
   if (!email || !password || !username) {
     console.error("Uso: npx ts-node scripts/crea-super-admin.ts <email> <password> <username>");
+    process.exit(1);
+  }
+
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.isValid) {
+    console.error("La password non soddisfa i requisiti di sicurezza:");
+    passwordValidation.errors.forEach(error => console.error("  -", error));
     process.exit(1);
   }
 

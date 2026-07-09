@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { validatePassword } from "@/lib/password-validation";
 
 // Funzione helper per verificare se l'utente che fa la richiesta è un super admin
 async function verificaSuperAdmin(request: Request) {
@@ -47,6 +48,11 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const { email, username, password, isSuperAdmin } = body;
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      return Response.json({ error: passwordValidation.errors.join(". ") }, { status: 400 });
+    }
 
     const exist = await prisma.amministratore.findFirst({
       where: {
