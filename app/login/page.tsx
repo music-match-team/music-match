@@ -47,7 +47,12 @@ export default function LoginPage() {
       });
 
       if (!response.ok) {
-        setErrore("Credenziali errate. Riprova.");
+        try {
+          const data = await response.json();
+          setErrore(data.error || "Errore durante l'accesso.");
+        } catch {
+          setErrore("Credenziali errate. Riprova.");
+        }
         setIsSubmitting(false);
         return;
       }

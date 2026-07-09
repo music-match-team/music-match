@@ -13,6 +13,7 @@ export default function GestioneUtentiPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [userDetail, setUserDetail] = useState<any>(null);
+  const [mediaEsteso, setMediaEsteso] = useState<any>(null);
 
   // Modals & Action Form state
   const [showSanzioneModal, setShowSanzioneModal] = useState(false);
@@ -406,7 +407,10 @@ export default function GestioneUtentiPage() {
                               </span>
                               
                               {/* Rendering del media in base al tipo */}
-                              <div className="mt-3 bg-[#12121a] rounded-lg overflow-hidden border border-[#2d2d3a]/60 flex items-center justify-center min-h-[120px]">
+                              <div 
+                                onClick={() => setMediaEsteso({ ...m, tipo: m.tipo.toLowerCase() })}
+                                className="mt-3 bg-[#12121a] rounded-lg overflow-hidden border border-[#2d2d3a]/60 flex items-center justify-center min-h-[120px] cursor-pointer hover:opacity-80 transition-opacity"
+                              >
                                 {m.tipo?.toUpperCase() === "IMMAGINE" && (
                                   // eslint-disable-next-line @next/next/no-img-element
                                   <img src={m.source} alt={m.descrizione || "Media utente"} className="max-h-32 object-contain w-full" />
@@ -558,6 +562,45 @@ export default function GestioneUtentiPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Media Esteso */}
+        {mediaEsteso && (
+          <div 
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" 
+            onClick={() => setMediaEsteso(null)}
+          >
+            <button 
+              className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all cursor-pointer"
+              onClick={() => setMediaEsteso(null)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            <div className="max-w-5xl max-h-[85vh] w-full flex items-center justify-center relative" onClick={(e) => e.stopPropagation()}>
+              {mediaEsteso.tipo === "video" ? (
+                <video src={mediaEsteso.source} controls autoPlay className="max-w-full max-h-[85vh] rounded-xl shadow-2xl" />
+              ) : mediaEsteso.tipo === "audio" ? (
+                <div className="bg-zinc-900 p-8 rounded-2xl w-full max-w-md shadow-2xl text-center border border-zinc-800">
+                   <svg className="w-24 h-24 mx-auto text-[#0ea5e9] mb-6" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M9 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h6V3H9z" />
+                   </svg>
+                   <h3 className="text-white font-bold mb-4">{mediaEsteso.descrizione || "Traccia Audio"}</h3>
+                   <audio src={mediaEsteso.source} controls autoPlay className="w-full" />
+                </div>
+              ) : (
+                <img src={mediaEsteso.source} className="max-w-full max-h-[85vh] rounded-xl shadow-2xl object-contain" alt={mediaEsteso.descrizione || "Media esteso"} />
+              )}
+              
+              {mediaEsteso.descrizione && mediaEsteso.tipo !== "audio" && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-6 py-2 rounded-full text-white/90 text-sm border border-white/10">
+                  {mediaEsteso.descrizione}
+                </div>
+              )}
             </div>
           </div>
         )}
