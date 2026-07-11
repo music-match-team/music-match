@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import ProteggiPagina from "../components/ProteggiPagina";
 
-export default function MatchMasterDetailPage() {
+function MatchContent() {
   const [utente, setUtente] = useState<any>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const idMatchUrl = searchParams?.get('idMatch');
   
   // Stati dei Match
   const [matches, setMatches] = useState<any[]>([]);
   const [loadingMatches, setLoadingMatches] = useState<boolean>(true);
   
   // Stato Chat (Master-Detail)
-  const [selectedMatch, setSelectedMatch] = useState<any>(null);
+  const selectedMatch = matches.find((m: any) => m.idMatch.toString() === idMatchUrl) || null;
   
   // Stati dei Messaggi
   const [messaggi, setMessaggi] = useState<any[]>([]);
@@ -37,15 +41,6 @@ export default function MatchMasterDetailPage() {
         if (response.ok) {
           const data = await response.json();
           setMatches(data);
-
-          const urlParams = new URLSearchParams(window.location.search);
-          const idMatchUrl = urlParams.get('idMatch');
-          if (idMatchUrl) {
-            const found = data.find((m: any) => m.idMatch.toString() === idMatchUrl);
-            if (found) {
-              setSelectedMatch(found);
-            }
-          }
         }
       } catch (e) {
         console.error("Errore nel caricamento dei match:", e);
@@ -119,7 +114,7 @@ export default function MatchMasterDetailPage() {
         const res = await fetch(`/api/match/${selectedMatch.idMatch}`, { method: "DELETE" });
         if (res.ok) {
           setMatches((prev) => prev.filter(m => m.idMatch !== selectedMatch.idMatch));
-          setSelectedMatch(null);
+          router.push('/match');
         } else {
           alert("Errore nell'annullamento del match");
         }
@@ -138,7 +133,7 @@ export default function MatchMasterDetailPage() {
   };
 
   return (
-    <ProteggiPagina>
+    <>
       {/* Contenitore a tutto schermo meno l'header, se desiderato. 
           Usiamo h-[calc(100vh-80px)] per simulare l'app nativa */}
       <main className="w-full h-screen md:h-screen md:p-4 bg-zinc-950 flex flex-col md:flex-row gap-0 md:gap-4 overflow-hidden text-slate-100">
@@ -185,7 +180,7 @@ export default function MatchMasterDetailPage() {
                   return (
                     <button
                       key={match.idMatch}
-                      onClick={() => setSelectedMatch(match)}
+                      onClick={() => router.push(`/match?idMatch=${match.idMatch}`)}
                       className={`w-full text-left flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
                           ? "bg-zinc-800/80 border-[#0ea5e9]/50 shadow-md"
@@ -253,7 +248,7 @@ export default function MatchMasterDetailPage() {
                 <div className="flex items-center gap-3">
                   {/* Tasto indietro (Mobile Only) */}
                   <button 
-                    onClick={() => setSelectedMatch(null)}
+                    onClick={() => router.push('/match')}
                     className="md:hidden p-2 -ml-2 rounded-full hover:bg-zinc-800 text-zinc-300 transition-colors cursor-pointer"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
@@ -354,6 +349,16 @@ export default function MatchMasterDetailPage() {
           )}
         </div>
       </main>
+    </>
+  );
+}
+
+export default function MatchMasterDetailPage() {
+  return (
+    <ProteggiPagina>
+      <Suspense fallback={<div className="h-screen bg-zinc-950 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0ea5e9]"></div></div>}>
+        <MatchContent />
+      </Suspense>
     </ProteggiPagina>
   );
 }

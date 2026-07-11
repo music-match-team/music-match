@@ -245,7 +245,7 @@ export default function DashboardPage() {
                 <div className="flex flex-col gap-3 relative z-10 flex-1">
                   {dashboard.recentMatches && dashboard.recentMatches.length > 0 ? (
                     dashboard.recentMatches.map((m: any) => (
-                      <div key={m.idMatch} onClick={() => router.push('/match')} className="flex items-center gap-3 p-3 rounded-xl bg-zinc-950/50 hover:bg-zinc-800 border border-zinc-800 cursor-pointer transition-all hover:border-[#0ea5e9]/50 shadow-sm">
+                      <div key={m.idMatch} onClick={() => router.push(`/match?idMatch=${m.idMatch}`)} className="flex items-center gap-3 p-3 rounded-xl bg-zinc-950/50 hover:bg-zinc-800 border border-zinc-800 cursor-pointer transition-all hover:border-[#0ea5e9]/50 shadow-sm">
                         <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 flex-shrink-0 border border-zinc-700">
                            {m.otherUser.immagineProfilo ? <img src={m.otherUser.immagineProfilo} alt="Profilo" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center font-bold text-lg text-zinc-400">{m.otherUser.username.charAt(0).toUpperCase()}</div>}
                         </div>
@@ -268,7 +268,7 @@ export default function DashboardPage() {
                 <div className="flex flex-col gap-3 relative z-10 flex-1">
                   {dashboard.upcomingEvents && dashboard.upcomingEvents.length > 0 ? (
                     dashboard.upcomingEvents.map((e: any) => (
-                      <div key={e.idEvento} onClick={() => router.push('/eventi')} className="flex flex-col p-3 rounded-xl bg-zinc-950/50 hover:bg-zinc-800 border border-zinc-800 cursor-pointer transition-all hover:border-[#22d3ee]/50 shadow-sm">
+                      <div key={e.idEvento} onClick={() => router.push(`/eventi?idEvento=${e.idEvento}`)} className="flex flex-col p-3 rounded-xl bg-zinc-950/50 hover:bg-zinc-800 border border-zinc-800 cursor-pointer transition-all hover:border-[#22d3ee]/50 shadow-sm">
                         <span className="font-medium text-white truncate">{e.titolo}</span>
                         <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5">
                           <span className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>{new Date(e.data).toLocaleDateString()}</span>

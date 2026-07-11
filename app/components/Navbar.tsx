@@ -264,7 +264,7 @@ export default function Navbar() {
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider mb-1">Prossimi Eventi</span>
                 {dashboard.upcomingEvents.map((e: any) => (
-                  <Link href="/eventi" key={e.idEvento} className="flex flex-col gap-1 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={e.titolo}>
+                  <Link href={`/eventi?idEvento=${e.idEvento}`} key={e.idEvento} className="flex flex-col gap-1 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={e.titolo}>
                     <span className="text-[13px] text-gray-300 font-medium truncate">{e.titolo}</span>
                     <span className="text-[10px] text-[#0ea5e9] truncate opacity-90">{new Date(e.data).toLocaleDateString()} • {e.citta?.nome || "Online"}</span>
                   </Link>

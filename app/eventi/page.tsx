@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ProteggiPagina from "../components/ProteggiPagina";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function EventiPage() {
+function EventiContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const idEventoUrl = searchParams?.get('idEvento');
+
   const [utente, setUtente] = useState<any>(null);
   const [eventi, setEventi] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   
-  const [selectedEvento, setSelectedEvento] = useState<any>(null);
+  const selectedEvento = eventi.find((e: any) => e.idEvento.toString() === idEventoUrl) || null;
   const [isGestioneMode, setIsGestioneMode] = useState<boolean>(false);
   const [openSections, setOpenSections] = useState<string[]>(['imiei']);
 
@@ -65,9 +68,6 @@ export default function EventiPage() {
             ? { ...ev, _count: { ...ev._count, partecipanti: (ev._count?.partecipanti || 0) + 1 }, partecipanti: [...(ev.partecipanti || []), { idUtente: utente.idUtente }] }
             : ev
         ));
-        if (selectedEvento && selectedEvento.idEvento === idEvento) {
-          setSelectedEvento((prev: any) => ({ ...prev, _count: { ...prev._count, partecipanti: (prev._count?.partecipanti || 0) + 1 }, partecipanti: [...(prev.partecipanti || []), { idUtente: utente.idUtente }] }));
-        }
         alert("Partecipazione registrata con successo!");
       } else {
         alert("Errore durante la registrazione. Potresti essere già partecipante.");
@@ -96,9 +96,6 @@ export default function EventiPage() {
             ? { ...ev, _count: { ...ev._count, partecipanti: Math.max(0, (ev._count?.partecipanti || 0) - 1) }, partecipanti: (ev.partecipanti || []).filter((p:any) => p.idUtente !== utente.idUtente) }
             : ev
         ));
-        if (selectedEvento && selectedEvento.idEvento === idEvento) {
-          setSelectedEvento((prev: any) => ({ ...prev, _count: { ...prev._count, partecipanti: Math.max(0, (prev._count?.partecipanti || 0) - 1) }, partecipanti: (prev.partecipanti || []).filter((p:any) => p.idUtente !== utente.idUtente) }));
-        }
         alert("Iscrizione annullata con successo!");
       } else {
         alert("Errore durante l'annullamento dell'iscrizione.");
@@ -119,7 +116,7 @@ export default function EventiPage() {
       
       if (response.ok) {
         setEventi(prev => prev.filter(ev => ev.idEvento !== idEvento));
-        setSelectedEvento(null);
+        router.push('/eventi');
         alert("Evento eliminato con successo.");
       } else {
         const data = await response.json();
@@ -147,7 +144,7 @@ export default function EventiPage() {
   const renderEventoListItem = (evento: any) => (
     <div
       key={evento.idEvento}
-      onClick={() => setSelectedEvento(evento)}
+      onClick={() => router.push(`/eventi?idEvento=${evento.idEvento}`)}
       className="group bg-zinc-900/60 border border-zinc-800 hover:border-[#0ea5e9]/50 rounded-2xl p-5 shadow-sm transition-all duration-300 relative overflow-hidden cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3"
     >
       <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#0ea5e9]/10 rounded-full group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
@@ -269,8 +266,7 @@ export default function EventiPage() {
   const mieiEventiOrg = eventi.filter(e => e.creatori?.some((c: any) => c.idUtente === utente?.idUtente));
 
   return (
-    <ProteggiPagina>
-      <div className="min-h-screen bg-zinc-950 text-zinc-100 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto space-y-8">
           
           {/* Header Principale come Dashboard */}
@@ -345,7 +341,7 @@ export default function EventiPage() {
                 {/* Informazioni Dettaglio */}
                 <div className="p-6 md:p-10 relative z-10">
                   <button 
-                    onClick={() => setSelectedEvento(null)}
+                    onClick={() => router.push('/eventi')}
                     className="mb-8 flex items-center gap-2 text-zinc-400 hover:text-white transition-colors cursor-pointer text-sm font-bold w-fit bg-zinc-950 px-4 py-2 rounded-lg border border-zinc-800"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -505,6 +501,15 @@ export default function EventiPage() {
           </div>
         </div>
       </div>
+  );
+}
+
+export default function EventiPage() {
+  return (
+    <ProteggiPagina>
+      <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#22d3ee]"></div></div>}>
+        <EventiContent />
+      </Suspense>
     </ProteggiPagina>
   );
 }
