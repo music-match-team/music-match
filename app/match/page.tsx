@@ -37,6 +37,15 @@ export default function MatchMasterDetailPage() {
         if (response.ok) {
           const data = await response.json();
           setMatches(data);
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const idMatchUrl = urlParams.get('idMatch');
+          if (idMatchUrl) {
+            const found = data.find((m: any) => m.idMatch.toString() === idMatchUrl);
+            if (found) {
+              setSelectedMatch(found);
+            }
+          }
         }
       } catch (e) {
         console.error("Errore nel caricamento dei match:", e);
@@ -251,7 +260,7 @@ export default function MatchMasterDetailPage() {
                   </button>
                   
                   {/* Info Utente Selezionato */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className="w-10 h-10 rounded-full border border-zinc-700 overflow-hidden bg-gradient-to-tr from-[#22d3ee] to-[#0ea5e9] flex items-center justify-center flex-shrink-0 shadow-inner">
                       { (selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).immagineProfilo ? (
                           <img src={(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).immagineProfilo} alt="Avatar" className="w-full h-full object-cover" />
@@ -261,13 +270,13 @@ export default function MatchMasterDetailPage() {
                           </span>
                       )}
                     </div>
-                    <div>
-                      <h2 className="text-sm md:text-base font-bold text-white">
+                    <div className="min-w-0 flex-1">
+                      <h2 className="text-sm md:text-base font-bold text-white truncate">
                         {(selectedMatch.idUtenteOrigina === utente.idUtente ? selectedMatch.utenteOttiene : selectedMatch.utenteOrigina).username}
                       </h2>
                       <span className="text-[10px] text-[#0ea5e9] font-medium flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] animate-pulse"></span>
-                        Match Attivo
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] animate-pulse shrink-0"></span>
+                        <span className="truncate">Match Attivo</span>
                       </span>
                     </div>
                   </div>
@@ -276,9 +285,10 @@ export default function MatchMasterDetailPage() {
                 {/* Opzioni / Annulla Match */}
                 <button 
                   onClick={annullaMatch}
-                  className="px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-semibold text-red-400 bg-red-950/30 hover:bg-red-950/80 border border-red-900/50 rounded-lg transition-all cursor-pointer"
+                  className="shrink-0 px-2 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-semibold text-red-400 bg-red-950/30 hover:bg-red-950/80 border border-red-900/50 rounded-lg transition-all cursor-pointer"
                 >
-                  Annulla Match
+                  <span className="hidden md:inline">Annulla Match</span>
+                  <span className="md:hidden">Annulla</span>
                 </button>
               </div>
 
@@ -315,7 +325,7 @@ export default function MatchMasterDetailPage() {
               </div>
 
               {/* Input Area Fissa in basso */}
-              <div className="p-3 md:p-4 bg-zinc-900/80 backdrop-blur-md border-t border-zinc-800 shrink-0 mb-safe">
+              <div className="p-3 pb-24 md:p-4 md:pb-4 bg-zinc-900/80 backdrop-blur-md border-t border-zinc-800 shrink-0 mb-safe">
                 <div className="relative flex items-center">
                   <input
                     type="text"

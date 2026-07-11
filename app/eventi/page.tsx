@@ -62,11 +62,11 @@ export default function EventiPage() {
       if (response.ok) {
         setEventi(prev => prev.map(ev => 
           ev.idEvento === idEvento 
-            ? { ...ev, _count: { ...ev._count, partecipanti: (ev._count?.partecipanti || 0) + 1 } }
+            ? { ...ev, _count: { ...ev._count, partecipanti: (ev._count?.partecipanti || 0) + 1 }, partecipanti: [...(ev.partecipanti || []), { idUtente: utente.idUtente }] }
             : ev
         ));
         if (selectedEvento && selectedEvento.idEvento === idEvento) {
-          setSelectedEvento((prev: any) => ({ ...prev, _count: { ...prev._count, partecipanti: (prev._count?.partecipanti || 0) + 1 } }));
+          setSelectedEvento((prev: any) => ({ ...prev, _count: { ...prev._count, partecipanti: (prev._count?.partecipanti || 0) + 1 }, partecipanti: [...(prev.partecipanti || []), { idUtente: utente.idUtente }] }));
         }
         alert("Partecipazione registrata con successo!");
       } else {
@@ -75,6 +75,37 @@ export default function EventiPage() {
     } catch (error) {
       console.error(error);
       alert("Errore di rete durante la registrazione");
+    }
+  }
+
+  async function annullaPartecipazione(idEvento: number, e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
+    try {
+      const response = await fetch("/api/partecipa", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idUtente: utente.idUtente,
+          idEvento
+        })
+      });
+      
+      if (response.ok) {
+        setEventi(prev => prev.map(ev => 
+          ev.idEvento === idEvento 
+            ? { ...ev, _count: { ...ev._count, partecipanti: Math.max(0, (ev._count?.partecipanti || 0) - 1) }, partecipanti: (ev.partecipanti || []).filter((p:any) => p.idUtente !== utente.idUtente) }
+            : ev
+        ));
+        if (selectedEvento && selectedEvento.idEvento === idEvento) {
+          setSelectedEvento((prev: any) => ({ ...prev, _count: { ...prev._count, partecipanti: Math.max(0, (prev._count?.partecipanti || 0) - 1) }, partecipanti: (prev.partecipanti || []).filter((p:any) => p.idUtente !== utente.idUtente) }));
+        }
+        alert("Iscrizione annullata con successo!");
+      } else {
+        alert("Errore durante l'annullamento dell'iscrizione.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Errore di rete durante l'annullamento");
     }
   }
 
@@ -173,12 +204,40 @@ export default function EventiPage() {
             </svg>
             {evento._count?.partecipanti || 0}
           </div>
-          <button 
-            onClick={(e) => partecipa(evento.idEvento, e)}
-            className="px-4 py-2 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white text-sm font-bold rounded-lg shadow-md shadow-[#0ea5e9]/20 transition-all active:scale-95 flex items-center justify-center cursor-pointer"
-          >
-            Partecipa
-          </button>
+          {(() => {
+            const giaIscritto = evento.partecipanti?.some((p: any) => p.idUtente === utente?.idUtente);
+            return (
+              <button 
+                onClick={(e) => {
+                  if (giaIscritto) {
+                    annullaPartecipazione(evento.idEvento, e);
+                  } else {
+                    partecipa(evento.idEvento, e);
+                  }
+                }}
+                className={`group px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center cursor-pointer w-[115px] ${
+                  giaIscritto
+                    ? 'bg-zinc-800 text-[#22d3ee] border border-zinc-700 hover:bg-red-950/30 hover:text-red-400 hover:border-red-900/50 shadow-none'
+                    : 'bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white shadow-md shadow-[#0ea5e9]/20 active:scale-95'
+                }`}
+              >
+                {giaIscritto ? (
+                  <>
+                    <span className="flex items-center gap-1.5 group-hover:hidden">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                      Iscritto
+                    </span>
+                    <span className="hidden items-center gap-1.5 group-hover:flex">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      Annulla
+                    </span>
+                  </>
+                ) : (
+                  "Partecipa"
+                )}
+              </button>
+            );
+          })()}
         </div>
       </div>
     </div>
@@ -337,13 +396,40 @@ export default function EventiPage() {
                           </button>
                         </div>
                       ) : (
-                        <button 
-                          onClick={() => partecipa(selectedEvento.idEvento)}
-                          className="w-full px-8 py-3.5 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-[#0ea5e9]/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
-                        >
-                          Partecipa Ora
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                        </button>
+                        (() => {
+                          const giaIscritto = selectedEvento.partecipanti?.some((p: any) => p.idUtente === utente?.idUtente);
+                          return (
+                            <button 
+                              onClick={() => { 
+                                if (giaIscritto) annullaPartecipazione(selectedEvento.idEvento);
+                                else partecipa(selectedEvento.idEvento);
+                              }}
+                              className={`group w-full px-8 py-3.5 font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-lg cursor-pointer ${
+                                giaIscritto
+                                  ? 'bg-zinc-800 text-[#22d3ee] border border-zinc-700 hover:bg-red-950/30 hover:text-red-400 hover:border-red-900/50'
+                                  : 'bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] hover:opacity-90 text-white shadow-lg shadow-[#0ea5e9]/20 active:scale-95'
+                              }`}
+                            >
+                              {giaIscritto ? (
+                                <>
+                                  <span className="flex items-center gap-2 group-hover:hidden">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                    Sei Iscritto
+                                  </span>
+                                  <span className="hidden items-center gap-2 group-hover:flex">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                    Annulla Iscrizione
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  Partecipa Ora
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                </>
+                              )}
+                            </button>
+                          );
+                        })()
                       )}
                     </div>
                   </div>

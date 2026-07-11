@@ -10,7 +10,6 @@ export default function Navbar() {
   const [notifiche, setNotifiche] = useState<any[]>([]);
   const [dashboard, setDashboard] = useState<any>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showEmptyPopup, setShowEmptyPopup] = useState(false);
 
   useEffect(() => {
     const aggiornaUtente = () => {
@@ -176,16 +175,9 @@ export default function Navbar() {
         </Link>
 
         {/* NOTIFICHE */}
-        <div id="notifiche-dropdown-container" className="order-5 md:order-6 flex-1 md:flex-none relative flex items-center justify-center md:justify-start w-full">
+        <div id="notifiche-dropdown-container" className="order-5 md:order-6 flex-1 md:flex-none relative flex flex-col items-center justify-center md:items-start w-full">
           <button
-            onClick={() => {
-              if (notifiche.length === 0) {
-                setShowEmptyPopup(true);
-                setShowDropdown(false);
-              } else {
-                setShowDropdown(!showDropdown);
-              }
-            }}
+            onClick={() => setShowDropdown(!showDropdown)}
             className={`flex flex-col md:flex-row items-center gap-1 md:gap-3 p-2 rounded-lg transition-colors w-full justify-center md:justify-start ${showDropdown ? "text-white md:bg-white/10" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
             title="Notifiche"
           >
@@ -202,7 +194,7 @@ export default function Navbar() {
 
           {/* Menu Dropdown Notifiche */}
           {showDropdown && (
-            <div className="absolute bottom-[calc(100%+1rem)] right-0 md:top-auto md:top-0 md:right-auto md:left-[calc(100%+1rem)] w-[90vw] md:w-80 max-w-[350px] bg-[#2d2d3a] border border-[#3f3f50] rounded-xl shadow-2xl z-[100] text-white overflow-hidden">
+            <div className="absolute bottom-[calc(100%+1rem)] right-0 md:static md:mt-2 w-[90vw] md:w-full max-w-[350px] bg-[#2d2d3a] border border-[#3f3f50] rounded-xl shadow-2xl z-[100] text-white overflow-hidden">
               {/* Header */}
               <div className="px-4 py-3 border-b border-[#3f3f50] flex justify-between items-center bg-[#22222a]">
                 <span className="font-semibold text-sm">Notifiche</span>
@@ -248,25 +240,6 @@ export default function Navbar() {
               </div>
             </div>
           )}
-
-          {/* Popup Nessuna Notifica */}
-          {showEmptyPopup && (
-            <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setShowEmptyPopup(false)}>
-              <div className="bg-[#1e1e24] border border-[#3f3f50] p-6 rounded-2xl shadow-2xl text-center max-w-sm w-full transform transition-all" onClick={e => e.stopPropagation()}>
-                <div className="bg-[#0ea5e9]/10 text-[#0ea5e9] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#0ea5e9]/30">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Tutto tranquillo!</h3>
-                <p className="text-gray-400 mb-6 text-sm">Non hai ancora ricevuto nessuna notifica.</p>
-                <button 
-                  onClick={() => setShowEmptyPopup(false)}
-                  className="w-full py-3 bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white rounded-xl font-bold shadow-lg shadow-[#0ea5e9]/20 transition-all cursor-pointer"
-                >
-                  Ho capito
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Shortcuts Desktop (Sidebar) */}
@@ -277,7 +250,7 @@ export default function Navbar() {
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider mb-1">Chat Recenti</span>
                 {dashboard.recentMatches.map((m: any) => (
-                  <Link href="/match" key={m.idMatch} className="flex items-center gap-2.5 p-1.5 -mx-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={m.otherUser.username}>
+                  <Link href={`/match?idMatch=${m.idMatch}`} key={m.idMatch} className="flex items-center gap-2.5 p-1.5 -mx-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" title={m.otherUser.username}>
                     <div className="w-7 h-7 rounded-full overflow-hidden bg-[#2d2d3a] shrink-0 border border-[#3f3f50]">
                       {m.otherUser.immagineProfilo ? <img src={m.otherUser.immagineProfilo} alt="Profilo" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center font-bold text-[10px] text-gray-400">{m.otherUser.username.charAt(0).toUpperCase()}</div>}
                     </div>

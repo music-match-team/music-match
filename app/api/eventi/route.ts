@@ -40,6 +40,9 @@ export async function GET(request: NextRequest) {
             utente: true
           }
         },
+        partecipanti: {
+          select: { idUtente: true }
+        },
         citta: true,
         _count: {
           select: { partecipanti: true }
