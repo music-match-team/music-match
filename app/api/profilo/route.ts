@@ -117,7 +117,7 @@ export async function POST(request: Request) {
         )
       });
     }
-
+    /*controlla se la citta esiste, se non esiste inserisce nel db*/
     if (citta) {
       let dbCitta = await prisma.citta.findFirst({
         where: { nome: citta }
